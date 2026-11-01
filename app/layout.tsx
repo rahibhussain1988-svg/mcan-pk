@@ -3,8 +3,8 @@ import './globals.css';
 import { PWARegister } from '@/components/pwa/PWARegister';
 
 export const metadata: Metadata = {
-  title: 'Imam Institute Smart ERP & Clinical Triage PWA',
-  description: 'Executive Command Suite, Fast-Cashier Fees Desk, Smart Expenses & Bedside Clinical Triage for Imam Institute of Nursing & Allied Health Sciences and Imam Medical Center',
+  title: 'Imam Institute of Nursing & Allied Health Sciences · Official Website & Smart ERP',
+  description: 'Official Portal for Imam Institute of Nursing & Allied Health Sciences and Paramedical, Jacobabad. BS Nursing (Generic), 9 Free Paramedical Diplomas, Clinical Rotations at JIMS (133-Bed) & Imam Medical Center, and Integrated Campus Management ERP.',
   manifest: '/manifest.webmanifest',
   icons: {
     icon: '/icons/icon.svg',
