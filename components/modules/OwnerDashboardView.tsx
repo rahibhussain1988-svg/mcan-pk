@@ -292,6 +292,97 @@ export const OwnerDashboardView: React.FC<OwnerDashboardProps> = ({ initialData 
         </div>
       </div>
 
+      {/* MODULE A: Proactive AI Anomaly & Regulatory Compliance Radar */}
+      <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <div>
+            <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <span className="p-1.5 rounded-xl bg-rose-100 text-rose-700">
+                <ShieldAlert size={18} />
+              </span>
+              Proactive AI Anomaly &amp; Compliance Radar
+            </h2>
+            <p className="text-xs text-slate-500">
+              Autonomous database scans for PNC attendance danger zones, expiring faculty licenses &amp; defaulters
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 w-fit">
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+            3 Active Risk Anomalies
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Radar Item 1: Attendance Danger Zone */}
+          <div className="p-4 rounded-xl border border-rose-200 bg-rose-50/40 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-rose-700 bg-rose-100 px-2 py-0.5 rounded">
+                PNC 85% Rule
+              </span>
+              <span className="text-xs font-black text-rose-700 font-mono">4 At Risk</span>
+            </div>
+            <h3 className="font-extrabold text-sm text-slate-900">Attendance Danger Radar</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              <strong>4 students</strong> have dropped into the <strong>85.0%–87.0%</strong> danger zone. 2 students (&lt;85%) are currently barred from exam slips.
+            </p>
+            <div className="pt-2 text-[11px] text-rose-800 font-medium">
+              • M. Hamza (85.2%) • Sanam Naz (85.8%)
+            </div>
+          </div>
+
+          {/* Radar Item 2: Faculty License Countdown */}
+          <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/40 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-2 py-0.5 rounded">
+                PNC License
+              </span>
+              <span className="text-xs font-black text-amber-700 font-mono">18 Days Left</span>
+            </div>
+            <h3 className="font-extrabold text-sm text-slate-900">Faculty License Expiry</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              <strong>Zahid Abbasi (Lecturer)</strong>: PNC License <code className="text-slate-800 font-mono bg-white px-1 rounded">PNC-RN-66421-S</code> expires in 18 days. Auto-lock pending renewal.
+            </p>
+            <div className="pt-2 text-[11px] text-amber-800 font-medium">
+              • Renewal paperwork dispatched to PNC
+            </div>
+          </div>
+
+          {/* Radar Item 3: Clinical Hospital Ward Ratio */}
+          <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50/40 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                IMC Hospital
+              </span>
+              <span className="text-xs font-black text-emerald-700 font-mono">1:6 Ratio</span>
+            </div>
+            <h3 className="font-extrabold text-sm text-slate-900">Preceptor Ward Ratio</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Hospital clinical ward supervision ratio is <strong>1:6</strong> across ER, ICU, and CCU bays, safely within the statutory <strong>1:8 limit</strong>.
+            </p>
+            <div className="pt-2 text-[11px] text-emerald-800 font-medium">
+              ✓ Fully Compliant under PNC inspection standards
+            </div>
+          </div>
+
+          {/* Radar Item 4: Examination Defaulter Lockout */}
+          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 bg-slate-200 px-2 py-0.5 rounded">
+                Fee Dues
+              </span>
+              <span className="text-xs font-black text-slate-900 font-mono">PKR 172.1k</span>
+            </div>
+            <h3 className="font-extrabold text-sm text-slate-900">Defaulter Exam Lockout</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              <strong>Bilal Ahmed Mahar</strong>: Overdue Semester 4 dues. Examination roll number slip locked until challan deposit cleared.
+            </p>
+            <div className="pt-2 text-[11px] text-slate-600 font-medium">
+              • Trilingual WhatsApp fee reminder triggered
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Owner One-Tap Mobile Approval Inbox */}
       <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm">
         <div className="flex items-center justify-between mb-4">

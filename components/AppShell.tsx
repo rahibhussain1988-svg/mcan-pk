@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/navigation/Sidebar';
 import { Header } from '@/components/navigation/Header';
 import { MobileBottomNav } from '@/components/navigation/MobileBottomNav';
 import { CommandPalette } from '@/components/navigation/CommandPalette';
+import { ImamAICopilotDrawer } from '@/components/navigation/ImamAICopilotDrawer';
 import { PWAInstallPrompt } from '@/components/pwa/PWAInstallPrompt';
 
 import { OwnerDashboardView } from '@/components/modules/OwnerDashboardView';
@@ -82,6 +83,20 @@ export const AppShell: React.FC<AppShellProps> = ({ initialData, initialTab, ini
     initialTab || (initialRole === 'triage' ? 'triage' : roleConfig.defaultTab)
   );
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isCopilotOpen, setIsCopilotOpen] = useState(false);
+  const [globalLang, setGlobalLang] = useState<'en' | 'ur' | 'sd'>('en');
+
+  // Keyboard shortcut listener for Ctrl+I (Imam Copilot)
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'i') {
+        e.preventDefault();
+        setIsCopilotOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Switch institutional user
   const handleSwitchUser = (userId: string) => {
@@ -122,6 +137,9 @@ export const AppShell: React.FC<AppShellProps> = ({ initialData, initialTab, ini
           onSwitchUser={handleSwitchUser}
           onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
           onSelectTab={setActiveTab}
+          onOpenCopilot={() => setIsCopilotOpen(true)}
+          currentLang={globalLang}
+          onSelectLang={setGlobalLang}
         />
 
         {/* Scrollable Main Viewport */}
@@ -232,6 +250,13 @@ export const AppShell: React.FC<AppShellProps> = ({ initialData, initialTab, ini
           isOpen={isCommandPaletteOpen}
           onClose={() => setIsCommandPaletteOpen(false)}
           onSelectTab={setActiveTab}
+        />
+
+        {/* Slide-Over Imam AI Copilot Drawer (Ctrl+I) */}
+        <ImamAICopilotDrawer
+          isOpen={isCopilotOpen}
+          onClose={() => setIsCopilotOpen(false)}
+          currentLang={globalLang}
         />
 
         {/* PWA Mobile Slide-Up Install Sheet */}

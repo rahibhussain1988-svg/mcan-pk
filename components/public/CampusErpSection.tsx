@@ -27,7 +27,7 @@ export const CampusErpSection: React.FC = () => {
       id: 'owner' as const,
       role: 'Management',
       title: 'Owner & Executive Command',
-      badge: 'Dr. Abid Hussain Soomro',
+      badge: 'Mr. Sajid Hussain (Chairman)',
       icon: Crown,
       color: 'from-amber-500 to-amber-700',
       textColor: 'text-amber-600',

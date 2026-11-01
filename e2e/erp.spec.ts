@@ -86,7 +86,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
 
     // Search for a student
     const searchInput = page.locator('[data-testid="cashier-search-input"]');
-    await searchInput.fill('BSN-2024-008'); // Fatima Zehra (Partial)
+    await searchInput.fill('Bilal Ahmed Mahar'); // Bilal Ahmed Mahar (Unpaid PKR 172.1k)
 
     // Click Collect Fee button
     const collectBtn = page.locator('button:has-text("Collect Fee")').first();
@@ -262,6 +262,147 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
     if (viewport && viewport.width > 768) {
       await expect(page.locator('[data-testid="desktop-nav-triage"]')).toBeVisible();
       await expect(page.locator('[data-testid="desktop-nav-owner"]')).not.toBeVisible();
+    }
+  });
+
+  test('Proactive AI Anomaly Radar & Regulatory Compliance Engine', async ({ page }) => {
+    await page.goto('/erp');
+
+    // Ensure we are in Owner view
+    const radarHeader = page.locator('text=Proactive AI Anomaly & Compliance Radar');
+    await expect(radarHeader).toBeVisible();
+
+    // 1. PNC 85%-87% Attendance Danger Zone Card
+    await expect(page.locator('text=Attendance Danger Radar')).toBeVisible();
+    await expect(page.locator('text=85.0%–87.0%')).toBeVisible();
+
+    // 2. Faculty License Countdown Card (Zahid Abbasi: 18 days left)
+    await expect(page.locator('text=Faculty License Expiry')).toBeVisible();
+    await expect(page.locator('strong:has-text("Zahid Abbasi")')).toBeVisible();
+    await expect(page.locator('text=18 Days Left')).toBeVisible();
+
+    // 3. Clinical Ward Preceptor Ratio Card (1:6)
+    await expect(page.locator('text=Preceptor Ward Ratio')).toBeVisible();
+    await expect(page.locator('text=1:6 Ratio')).toBeVisible();
+
+    // 4. Defaulter Exam Lockout Risk Card
+    await expect(page.locator('text=Defaulter Exam Lockout')).toBeVisible();
+    await expect(page.locator('strong:has-text("Bilal Ahmed Mahar")')).toBeVisible();
+  });
+
+  test('Slide-Over Imam AI Copilot Drawer Real-time Query Flow', async ({ page }) => {
+    await page.goto('/erp');
+
+    // Open Copilot via button
+    const copilotBtn = page.locator('[data-testid="open-copilot-btn"]');
+    await expect(copilotBtn).toBeVisible();
+    await copilotBtn.click();
+
+    // Verify slide-over drawer is open
+    const drawer = page.locator('[data-testid="imam-copilot-drawer"]');
+    await expect(drawer).toBeVisible();
+    await expect(drawer.getByRole('heading', { name: 'Imam AI Copilot' })).toBeVisible();
+    await expect(drawer.locator('text=Live DB')).toBeVisible();
+
+    // Query database via Copilot input
+    const input = page.locator('[data-testid="copilot-input"]');
+    await input.fill('List all students in danger zone');
+    await page.locator('[data-testid="copilot-send-btn"]').click();
+
+    // Verify response arrives with grounded information
+    await expect(
+      drawer.locator('text=PNC 85% Attendance Anomaly').or(drawer.locator('text=Danger Zone'))
+    ).toBeVisible({ timeout: 10000 });
+  });
+
+  test('Student Self-Service Portal & Preceptor PIN Sign-Off Flow', async ({ page }) => {
+    await page.goto('/erp');
+
+    // Switch to Student Role via role-switcher
+    const userSwitcher = page.locator('[data-testid="role-switcher-select"]');
+    await userSwitcher.selectOption('usr-stu-ayesha');
+    await page.waitForTimeout(600);
+
+    // Verify Student Portal loads
+    await expect(page.locator('h1:has-text("Ayesha Noor")')).toBeVisible();
+    await expect(page.locator('text=Digital QR ID Pass')).toBeVisible();
+
+    // Check 85% Guardrail Tab
+    await page.locator('[data-testid="tab-attendance-btn"]').click();
+    await expect(page.locator('text=PNC Mandatory 85% Clinical Attendance Guardrail')).toBeVisible();
+
+    // Check PNC Logbook Tab
+    await page.locator('[data-testid="tab-logbook-btn"]').click();
+    await expect(page.locator('text=Digital Clinical Competency Logbook')).toBeVisible();
+
+    // Look for an unsigned log entry with PIN sign-off button
+    const signOffBtn = page.locator('button:has-text("Preceptor PIN Sign-Off")').first();
+    if (await signOffBtn.isVisible()) {
+      await signOffBtn.click();
+      await expect(page.locator('text=Preceptor PIN Clinical Sign-Off')).toBeVisible();
+
+      // Enter valid Preceptor PIN 9988
+      await page.fill('[data-testid="supervisor-pin-input"]', '9988');
+
+      page.once('dialog', async (dialog) => {
+        await dialog.accept();
+      });
+      await page.locator('[data-testid="confirm-pin-btn"]').click();
+      await page.waitForTimeout(1000);
+    }
+
+    // Check AI Viva Coach Tab
+    await page.locator('[data-testid="tab-ai-coach-btn"]').click();
+    await expect(page.locator('text=Semester-Aware AI NCLEX / PNC Viva & OSPE Coach')).toBeVisible();
+    await page.fill('textarea[placeholder*="State aseptic protocol"]', '1. Confirm patient identity. 2. Palpate radial artery and perform Modified Allen Test to ensure collateral ulnar circulation. 3. Cleanse area with chlorhexidine/alcohol using circular technique. 4. Insert 22G heparinized syringe at 45 degree angle. 5. Apply firm pressure for 5 minutes post-punction.');
+    
+    await page.locator('[data-testid="evaluate-viva-btn"]').click();
+    // Verify AI Feedback renders
+    await expect(page.locator('text=Score:').or(page.locator('text=Feedback'))).toBeVisible({ timeout: 12000 });
+  });
+
+  test('Official Trilingual Correspondence & PNC Letterhead Drafting Flow', async ({ page }) => {
+    await page.goto('/erp');
+
+    // Switch to Principal: Vinod Kumar for full drafting studio access
+    const userSwitcher = page.locator('[data-testid="role-switcher-select"]');
+    await userSwitcher.selectOption('usr-teach-vinod');
+    await page.waitForTimeout(500);
+
+    // Switch to Drafting Studio tab
+    const viewport = page.viewportSize();
+    if (viewport && viewport.width <= 768) {
+      await page.locator('[data-testid="mobile-tab-drafting"]').click();
+    } else {
+      await page.locator('[data-testid="desktop-nav-drafting"]').click();
+    }
+
+    await expect(page.locator('text=Official Correspondence & Drafting Studio')).toBeVisible();
+
+    // Verify template chips
+    await expect(page.locator('button:has-text("Clinical Ward Sick Leave")')).toBeVisible();
+    await expect(page.locator('button:has-text("Need-Based Fee Concession")')).toBeVisible();
+
+    // Verify live PNC evaluation banner is visible
+    await expect(page.locator('text=Live PNC Clinical Guardrail Evaluation:')).toBeVisible();
+
+    // Click Need-Based Fee Concession template
+    await page.locator('button:has-text("Need-Based Fee Concession")').click();
+    await expect(page.locator('input[value*="Need-Based 50% Tuition Fee Concession"]')).toBeVisible();
+
+    // Submit new application
+    page.once('dialog', async (dialog) => {
+      await dialog.accept();
+    });
+    await page.locator('button:has-text("Submit Draft for Principal Approval")').click();
+    await page.waitForTimeout(1000);
+
+    // Verify print modal trigger
+    const printDocBtn = page.locator('button:has-text("Official Letterhead")').first();
+    if (await printDocBtn.isVisible()) {
+      await printDocBtn.click();
+      await expect(page.locator('[data-testid="print-letterhead-btn"]')).toBeVisible();
+      await expect(page.locator('text=Print Letterhead (A4)')).toBeVisible();
     }
   });
 });

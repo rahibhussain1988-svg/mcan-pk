@@ -96,3 +96,197 @@ Provide encouraging, clinically accurate feedback with 1 clinical tip and score 
 • **Key Strength:** Proper sequence of aseptic technique and anatomical landmarking identified.
 • **Clinical Tip:** Always remember to confirm two patient identifiers (Name & MR#) and verify allergic history prior to administering intravenous cannulation or blood sampling.`;
 }
+
+export interface CopilotContext {
+  todayCash: number;
+  monthlyFee: number;
+  totalReceivables: number;
+  dangerAttendanceStudents: Array<{ name: string; rollNo: string; percent: number }>;
+  barredStudents: Array<{ name: string; rollNo: string; percent: number }>;
+  expiringStaff: Array<{ name: string; designation: string; daysLeft: number; licenseNo: string }>;
+  triageSummary: { totalWaiting: number; esi1: number; esi2: number; esi3: number; escalatedCount: number };
+  activeStaffCount: number;
+  lang: 'en' | 'ur' | 'sd';
+}
+
+export async function queryImamCopilot(
+  query: string,
+  ctx: CopilotContext
+): Promise<{ text: string; source: 'gemini' | 'deterministic' }> {
+  const q = query.toLowerCase();
+
+  // Try Gemini 2.5 Flash if available
+  if (aiClient) {
+    try {
+      const systemPrompt = `You are the Imam AI Copilot, the intelligent edtech & clinical AI advisor for Imam Institute of Nursing & Allied Health Sciences and Imam Medical Center.
+You are directly connected to the institute's live SQLite database. Answer accurately, concisely, and professionally in ${
+        ctx.lang === 'ur' ? 'Urdu (اردو)' : ctx.lang === 'sd' ? 'Sindhi (سنڌي)' : 'English'
+      }.
+
+LIVE DATABASE CONTEXT:
+- Today's Cash in Hand: PKR ${ctx.todayCash.toLocaleString()}
+- Monthly Fee Recovery: PKR ${ctx.monthlyFee.toLocaleString()}
+- Total Receivables (Unpaid Fee Dues): PKR ${ctx.totalReceivables.toLocaleString()}
+- Students in PNC 85%-87% Danger Zone: ${
+        ctx.dangerAttendanceStudents.map((s) => `${s.name} (${s.rollNo}: ${s.percent}%)`).join(', ') || 'None'
+      }
+- Students Barred (<85% Attendance): ${
+        ctx.barredStudents.map((s) => `${s.name} (${s.rollNo}: ${s.percent}%)`).join(', ') || 'None'
+      }
+- Faculty Licenses Expiring within 30 days: ${
+        ctx.expiringStaff
+          .map((f) => `${f.name} (${f.designation}, License: ${f.licenseNo}, ${f.daysLeft} days remaining)`)
+          .join(', ') || 'None'
+      }
+- Hospital Triage Queue at Imam Medical Center: ${ctx.triageSummary.totalWaiting} total waiting. ESI 1 (Immediate): ${
+        ctx.triageSummary.esi1
+      }, ESI 2 (Emergent): ${ctx.triageSummary.esi2}, ESI 3 (Urgent): ${ctx.triageSummary.esi3}. Wait-Time Escalated (>30 mins): ${
+        ctx.triageSummary.escalatedCount
+      }.
+- Total Active Staff: ${ctx.activeStaffCount}
+
+User Question: "${query}"
+
+Guidelines:
+1. Provide exact numbers from the database context.
+2. If clinical triage is asked, reference NEWS2 / ESI safety protocols and student nurse pairings.
+3. If attendance or regulatory compliance is asked, reference Pakistan Nursing & Midwifery Council (PNC) 85% rule.
+4. Format with neat markdown bullets.`;
+
+      const response = await aiClient.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: systemPrompt,
+      });
+
+      if (response && response.text) {
+        return { text: response.text, source: 'gemini' };
+      }
+    } catch (err) {
+      console.warn('Gemini Copilot call failed, using deterministic response:', err);
+    }
+  }
+
+  // Deterministic local engine
+  // 1. Attendance & Danger Radar
+  if (q.includes('attendance') || q.includes('pnc') || q.includes('danger') || q.includes('barred') || q.includes('حاضری') || q.includes('حاضري')) {
+    if (ctx.lang === 'ur') {
+      return {
+        text: `📊 **پی این سی 85% حاضری اینالیٹکس و رسک ریڈار:**
+• **خطرناک زون (85%–87%):** ${ctx.dangerAttendanceStudents.length} طلباء امتحانی خطرے کے قریب ہیں:
+${ctx.dangerAttendanceStudents.map((s) => `  - ${s.name} (${s.rollNo}): **${s.percent}%**`).join('\n')}
+• **امتحان سے روکے گئے طلباء (<85%):** ${ctx.barredStudents.length} طلباء:
+${ctx.barredStudents.map((s) => `  - ${s.name} (${s.rollNo}): **${s.percent}%** (شوکاز نوٹس جاری)`).join('\n')}
+• **پی این سی ریگولیشن:** امتحانات میں شرکت کے لیے کم از کم 85 فیصد کلینیکل وارڈ اور تھیوری حاضری لازمی ہے۔`,
+        source: 'deterministic',
+      };
+    }
+    if (ctx.lang === 'sd') {
+      return {
+        text: `📊 **پي اين سي 85% حاضري تجزيو ۽ الرٽ:**
+• **خطري واري زون وارا شاگرد (85%–87%):** ${ctx.dangerAttendanceStudents.length} شاگرد:
+${ctx.dangerAttendanceStudents.map((s) => `  - ${s.name} (${s.rollNo}): **${s.percent}%**`).join('\n')}
+• **روڪيل شاگرد (<85%):** ${ctx.barredStudents.length} شاگرد جن جي حاضري گهٽ هجڻ سبب روڪ لڳائي وئي آهي.
+• **ريگيوليشن:** پي اين سي قانون موجب امتحاني رول نمبر سلپ لاءِ 85 سيڪڙو وارڊ ڪلاڪ پورا هجڻ ضروري آهن.`,
+        source: 'deterministic',
+      };
+    }
+    return {
+      text: `📊 **PNC 85% Attendance Anomaly & Danger Radar:**
+• **Danger Zone (85%–87% Threshold):** ${ctx.dangerAttendanceStudents.length} student(s) approaching disqualification:
+${ctx.dangerAttendanceStudents.map((s) => `  - ${s.name} (${s.rollNo}): **${s.percent}%**`).join('\n')}
+• **Barred from Examination (<85%):** ${ctx.barredStudents.length} student(s):
+${ctx.barredStudents.map((s) => `  - ${s.name} (${s.rollNo}): **${s.percent}%** (Show-Cause notice dispatched)`).join('\n')}
+• **Statutory Policy:** Under Pakistan Nursing & Midwifery Council rules, students with under 85% bedside hours are barred from university examinations. Additional weekend makeup shifts required.`,
+      source: 'deterministic',
+    };
+  }
+
+  // 2. Triage & Hospital Queue
+  if (q.includes('triage') || q.includes('patient') || q.includes('hospital') || q.includes('esi') || q.includes('news2') || q.includes('مریض') || q.includes('وارڊ')) {
+    if (ctx.lang === 'ur') {
+      return {
+        text: `🏥 **امام میڈیکل سینٹر کلینیکل ٹرائی ایج سٹیٹس:**
+• **زیرِ انتظار مریض:** کل ${ctx.triageSummary.totalWaiting} مریض ایمرجنسی میں داخل ہیں۔
+• **ہائی اکیوٹی (ESI لیول 1 و 2):** ${ctx.triageSummary.esi1 + ctx.triageSummary.esi2} تشویشناک کیسز (ری سیسیٹیشن بے میں سینئر بی ایس این نرسز پیئرڈ ہیں)۔
+• **تاخیر کا شکار مریض (>30 منٹ):** ${ctx.triageSummary.escalatedCount} مریض جنہیں فوری ری اسسمنٹ کی ضرورت ہے۔
+• **طبی تدریس:** تمام مریضوں کے ساتھ بی ایس این و پیرا میڈیکل طلباء کو کلینیکل لاگ بک پروسیجرز کے لیے منسلک کیا گیا ہے۔`,
+        source: 'deterministic',
+      };
+    }
+    if (ctx.lang === 'sd') {
+      return {
+        text: `🏥 **امام ميڊيڪل سينٽر ايمرجنسي ڪلينيڪل ٽرائي ايج:**
+• **ڪل مريض:** ${ctx.triageSummary.totalWaiting} مريض ايمرجنسي ڪيو ۾ داخل آهن.
+• **انتهائي اهم ڪيس (ESI 1 & 2):** ${ctx.triageSummary.esi1 + ctx.triageSummary.esi2} ايمرجنسي ريسوسيٽيشن مريض.
+• **دير سان ترسيل مريض (>30 منٽ):** ${ctx.triageSummary.escalatedCount} مريض خودڪار طريقي سان ترجيحي لسٽ ۾ مٿي آندا ويا آهن.
+• **شاگرد پارٽنرشپ:** هر مريض سان پي اين سي لاگ بڪ ڪمپيٽينسي مڪمل ڪرڻ لاءِ نرسنگ شاگرد موجود آهي.`,
+        source: 'deterministic',
+      };
+    }
+    return {
+      text: `🏥 **Imam Medical Center Emergency Triage Live Pulse:**
+• **Active Triage Queue:** ${ctx.triageSummary.totalWaiting} patient(s) currently admitted in emergency intake.
+• **High Acuity Resuscitation (ESI Level 1 & 2):** ${ctx.triageSummary.esi1 + ctx.triageSummary.esi2} critical patient(s) being managed in Bays 1 & 2 under Preceptor supervision.
+• **Wait-Time Priority Escalation (>30 mins):** ${ctx.triageSummary.escalatedCount} patient(s) visually escalated due to elapsed reassessment intervals.
+• **Clinical Student Pairing:** All ESI 1–5 intakes are automatically paired with on-duty BSN/Paramedical trainees for bedside logbook procedures (IV Cannulation, ABG, 12-Lead ECG).`,
+      source: 'deterministic',
+    };
+  }
+
+  // 3. Financial, Cash & Fees
+  if (q.includes('fee') || q.includes('cash') || q.includes('financial') || q.includes('challan') || q.includes('recovery') || q.includes('فیس') || q.includes('پیسا')) {
+    if (ctx.lang === 'ur') {
+      return {
+        text: `💰 **کیمپس فنانشل و کیش والٹ پوزیشن:**
+• **کیش ان ہینڈ:** PKR ${ctx.todayCash.toLocaleString()} (کیشئر شفٹ رجسٹر میں تصدیق شدہ)
+• **ماہانہ فیس وصولی:** PKR ${ctx.monthlyFee.toLocaleString()}
+• **باقی واجبات (ڈیفالٹرز):** PKR ${ctx.totalReceivables.toLocaleString()} باقی ہیں جنہیں امتحانی رول نمبر سلپ لاک آؤٹ کے تحت واٹس ایپ ری مائنڈر بھیجے گئے ہیں۔`,
+        source: 'deterministic',
+      };
+    }
+    return {
+      text: `💰 **Financial Pulse & Fast-Cashier Desk Summary:**
+• **Today's Cash in Safe Vault:** PKR ${ctx.todayCash.toLocaleString()} (Reconciled with Cashier Shift Closing Register)
+• **Current Month Fee Collections:** PKR ${ctx.monthlyFee.toLocaleString()}
+• **Total Receivables (Pending Dues):** PKR ${ctx.totalReceivables.toLocaleString()} across partial installments and overdue defaulters.
+• **Examination Lockout Status:** 3-Copy Bank Challans generated; final roll number slips automatically unlock upon dues clearance.`,
+      source: 'deterministic',
+    };
+  }
+
+  // 4. Faculty Licenses & Compliance
+  if (q.includes('license') || q.includes('faculty') || q.includes('staff') || q.includes('expiry') || q.includes('پریسیپٹر') || q.includes('استاد')) {
+    return {
+      text: `🩺 **Faculty 360° & PNC / PMDC License Compliance Radar:**
+• **Active Staff Roster:** ${ctx.activeStaffCount} total personnel across Leadership, Teaching Faculty, and Support Staff.
+• **Upcoming License Expiries (<30 Days):** ${
+        ctx.expiringStaff.length > 0
+          ? ctx.expiringStaff
+              .map(
+                (f) =>
+                  `⚠️ **${f.name}** (${f.designation}) — License \`${f.licenseNo}\` expires in **${f.daysLeft} days**! Renewal required to preserve preceptor logbook sign-off authorization.`
+              )
+              .join('\n')
+          : '✓ All teaching faculty and clinical preceptor licenses are fully compliant and active.'
+      }
+• **Supervision Standards:** All hospital shifts strictly comply with the maximum 1:8 student-to-preceptor ratio mandated by PNC.`,
+      source: 'deterministic',
+    };
+  }
+
+  // Default general intelligence response
+  return {
+    text: `🏛️ **Imam Institute AI Copilot Overview:**
+• **Academic Enrollment:** 18 registered students across Generic BSN, Post-RN BSN, LHV, CNA, DPT, and BS-MLT.
+• **Hospital Operations:** ${ctx.triageSummary.totalWaiting} emergency triage patients currently being treated with bedside student nurse pairing.
+• **Compliance Status:** ${
+      ctx.expiringStaff.length > 0
+        ? `1 faculty license expiring in ${ctx.expiringStaff[0].daysLeft} days (${ctx.expiringStaff[0].name}).`
+        : 'All faculty licenses active.'
+    }
+• **Financial Posture:** PKR ${ctx.todayCash.toLocaleString()} cash in hand with active 3-copy bank challan collection.
+
+*Ask me about attendance danger zones, ER triage cases, faculty licenses, fee defaulters, or clinical protocols.*`,
+    source: 'deterministic',
+  };
+}
