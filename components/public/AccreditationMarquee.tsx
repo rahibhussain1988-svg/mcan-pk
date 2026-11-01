@@ -27,6 +27,7 @@ export const AccreditationMarquee: React.FC = () => {
           {[...accreditations, ...accreditations].map((acc, idx) => (
             <button
               key={`${acc.id}-${idx}`}
+              data-testid={`accreditation-${acc.id}`}
               onClick={() => setSelectedAccreditation(acc)}
               className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-md transition-all duration-200 text-left shrink-0 cursor-pointer shadow-sm hover:scale-[1.02]"
             >

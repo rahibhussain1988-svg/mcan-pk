@@ -1,0 +1,75 @@
+<svg width="512" height="512" viewBox="0 0 240 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#062B54" />
+      <stop offset="100%" stopColor="#031730" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#FFFFFF" />
+      <stop offset="100%" stopColor="#F1F5F9" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded box for app icon -->
+  <rect width="240" height="260" rx="48" fill="url(#bgGrad)" />
+
+  <!-- Shield Outline with Split Dual-Color Border -->
+  <path d="M 120 28 Q 185 28 198 90 Q 198 178 120 226 Q 42 178 42 90 Q 55 28 120 28 Z" fill="url(#shieldGrad)" stroke="#CBD5E1" stroke-width="2" />
+  <path d="M 120 26 Q 52 26 40 90 Q 40 145 75 188" fill="none" stroke="#0062B1" stroke-width="6" stroke-linecap="round" />
+  <path d="M 120 26 Q 188 26 200 90 Q 200 145 165 188" fill="none" stroke="#E30613" stroke-width="6" stroke-linecap="round" />
+  <path d="M 75 188 Q 120 228 120 228" fill="none" stroke="#E30613" stroke-width="6" stroke-linecap="round" />
+  <path d="M 165 188 Q 120 228 120 228" fill="none" stroke="#0062B1" stroke-width="6" stroke-linecap="round" />
+
+  <!-- Cap and Book -->
+  <g transform="translate(120, 44) scale(0.9)">
+    <polygon points="0,-16 26,-7 0,2 -26,-7" fill="#0A0F1D" />
+    <path d="M -12,-5 L -12,4 Q 0,11 12,4 L 12,-5 Z" fill="#1E293B" />
+    <path d="M 0,-7 Q 16,-4 20,6" fill="none" stroke="#D97706" stroke-width="2" />
+    <circle cx="20" cy="8" r="2.5" fill="#D97706" />
+    <path d="M -22,7 Q 0,4 22,7 L 20,13 Q 0,9 -20,13 Z" fill="#E30613" />
+  </g>
+
+  <!-- Motto -->
+  <text x="120" y="70" text-anchor="middle" fill="#E30613" font-size="7.5" font-weight="bold" font-family="system-ui, sans-serif" letter-spacing="0.4">
+    TRUST IN QUALITY EDUCATION
+  </text>
+
+  <!-- Quadrants -->
+  <g transform="translate(75, 84)">
+    <rect x="0" y="0" width="43" height="43" rx="4" fill="#E30613" />
+    <g transform="translate(21.5, 21.5) scale(0.65)">
+      <polygon points="0,-14 20,-5 0,4 -20,-5" fill="#FFFFFF" />
+      <path d="M -10,-3 L -10,6 Q 0,11 10,6 L 10,-3 Z" fill="#FFFFFF" opacity="0.9" />
+    </g>
+
+    <rect x="47" y="0" width="43" height="43" rx="4" fill="#0062B1" />
+    <g transform="translate(68.5, 21.5) scale(0.7)">
+      <line x1="0" y1="-16" x2="0" y2="16" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+      <circle cx="0" cy="-16" r="2.5" fill="#FFFFFF" />
+      <path d="M -7,-8 Q 0,-5 7,-2 Q 0,2 -7,5 Q 0,9 7,12" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" />
+    </g>
+
+    <rect x="0" y="47" width="43" height="43" rx="4" fill="#0062B1" />
+    <g transform="translate(21.5, 68.5) scale(0.7)">
+      <path d="M -8,-14 L -8,-7 Q -8,3 0,5 Q 8,3 8,-7 L 8,-14" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" />
+      <circle cx="9" cy="15" r="3.5" fill="#FFFFFF" />
+    </g>
+
+    <rect x="47" y="47" width="43" height="43" rx="4" fill="#E30613" />
+    <g transform="translate(68.5, 68.5) scale(0.7)">
+      <path d="M -3,-14 L 3,-14 L 3,-6 L 12,12 Q 13,15 9,15 L -9,15 Q -13,15 -12,12 L -3,-6 Z" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linejoin="round" />
+      <path d="M -8,8 Q 0,6 8,8 L 10,13 L -10,13 Z" fill="#FFFFFF" opacity="0.85" />
+    </g>
+  </g>
+
+  <!-- Banner -->
+  <g transform="translate(120, 210)">
+    <path d="M -102,-6 Q 0,-14 102,-6 L 108,18 Q 0,12 -108,18 Z" fill="#0062B1" />
+    <text x="0" y="2" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="900" font-family="system-ui, sans-serif" letter-spacing="1">
+      IMAM INSTITUTE
+    </text>
+    <text x="0" y="12.5" text-anchor="middle" fill="#F8FAFC" font-size="4.4" font-weight="bold" font-family="system-ui, sans-serif" letter-spacing="0.3">
+      NURSING &amp; ALLIED HEALTH SCIENCES
+    </text>
+  </g>
+</svg>

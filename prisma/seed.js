@@ -26,6 +26,10 @@ async function main() {
   await prisma.userProfilePreference.deleteMany({});
   await prisma.competencyRequirement.deleteMany({});
   await prisma.cashierShiftClosing.deleteMany({});
+  await prisma.admissionApplication.deleteMany({});
+  await prisma.jobApplication.deleteMany({});
+  await prisma.programWaitlist.deleteMany({});
+  await prisma.publicInquiry.deleteMany({});
 
   // 2. Official Staff & Users List from Prompt
   // Management (5 Members)

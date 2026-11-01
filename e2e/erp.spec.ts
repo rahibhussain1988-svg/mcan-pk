@@ -21,7 +21,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
   });
 
   test('Desktop & Mobile Responsive Navigation and Zero Horizontal Overflow', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/erp');
 
     // Check page title and crest branding
     await expect(page).toHaveTitle(/Imam Institute/);
@@ -53,7 +53,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
   });
 
   test('Owner Dashboard Pulse, Approvals, and P&L Verification', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/erp');
 
     // Verify Financial Pulse Cards are rendered
     await expect(page.locator('text=Today\'s Cash in Hand')).toBeVisible();
@@ -72,7 +72,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
   });
 
   test('Fast Cashier Fee Collection & Thermal Receipt Flow', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/erp');
 
     // Switch to Fees tab
     const viewport = page.viewportSize();
@@ -108,7 +108,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
   });
 
   test('Smart Expenses Voucher Entry & Budget Guardrail Alert', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/erp');
 
     const viewport = page.viewportSize();
     if (viewport && viewport.width <= 768) {
@@ -140,7 +140,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
   });
 
   test('Patient Bedside Triage Intake & Student Nurse Pairing Flow', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/erp');
 
     const viewport = page.viewportSize();
     if (viewport && viewport.width <= 768) {
@@ -173,7 +173,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
   });
 
   test('Profile & Digital ID Card Persistence Flow', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/erp');
 
     const viewport = page.viewportSize();
     if (viewport && viewport.width <= 768) {
@@ -208,7 +208,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
   });
 
   test('Official Personnel Roster & Dynamic RBAC Enforcement', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/erp');
 
     const userSwitcher = page.locator('[data-testid="role-switcher-select"]');
     await expect(userSwitcher).toBeVisible();
