@@ -1,0 +1,464 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model UserProfilePreference {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  role                 String   @default("OWNER") // OWNER, PRINCIPAL, VICE_PRINCIPAL, FACULTY, ADMIN, CASHIER, SUPPORT, STUDENT
+  category             String   @default("Management") // Management, Teaching Staff, Support Staff, Student
+  fullName             String
+  email                String
+  phone                String
+  cnic                 String
+  avatarUrl            String?
+  designation          String
+  department           String?
+  emergencyContact     String?
+  address              String?
+  bloodGroup           String?
+  language             String   @default("en") // en, ur, sd
+  tableDensity         String   @default("comfortable") // compact, comfortable
+  notificationsEnabled Boolean  @default(true)
+  pinCode              String   @default("1234")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model OwnerApprovalItem {
+  id           String    @id @default(uuid())
+  title        String
+  type         String    // EXPENSE_VOUCHER, FEE_CONCESSION, PAYROLL_BATCH, OFFICIAL_LETTER
+  referenceId  String?
+  requestedBy  String
+  amount       Float?
+  details      String
+  status       String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  reviewNotes  String?
+  reviewedAt   DateTime?
+  reviewedBy   String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model ExpenseCategory {
+  id           String           @id @default(uuid())
+  name         String
+  code         String           @unique
+  monthlyBudget Float
+  currentSpent  Float           @default(0)
+  icon         String           @default("Receipt")
+  description  String?
+  vouchers     ExpenseVoucher[]
+  createdAt    DateTime         @default(now())
+}
+
+model ExpenseVoucher {
+  id              String          @id @default(uuid())
+  voucherNo       String          @unique // CPV-2026-XXXX
+  categoryId      String
+  category        ExpenseCategory @relation(fields: [categoryId], references: [id])
+  vendorName      String
+  amount          Float
+  paymentMode     String          // Petty Cash, Bank Transfer, Cheque, JazzCash/Easypaisa
+  costCenter      String          // e.g. BSN Program, Pathology Lab, Solar Grid, Hospital
+  description     String
+  receiptImageUrl String?
+  status          String          @default("PENDING_APPROVAL") // PENDING_APPROVAL, APPROVED, PAID
+  preparedBy      String
+  checkedBy       String?
+  approvedBy      String?
+  paidAt          DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model PettyCashLog {
+  id               String   @id @default(uuid())
+  date             DateTime @default(now())
+  openingFloat     Float
+  totalSpent       Float    @default(0)
+  remainingBalance Float
+  notes            String?
+  closedBy         String?
+  createdAt        DateTime @default(now())
+}
+
+model Program {
+  id               String         @id @default(uuid())
+  name             String
+  code             String         @unique // BSN, POST_RN, LHV, CNA, DPT, BS_MLT, OT_TECH
+  durationYears    Int            @default(4)
+  totalSemesters   Int            @default(8)
+  baseTuitionFee   Float
+  labFee           Float
+  clinicalFee      Float
+  batches          Batch[]
+  students         Student[]
+  feeStructures    FeeStructure[]
+  createdAt        DateTime       @default(now())
+}
+
+model Batch {
+  id              String    @id @default(uuid())
+  programId       String
+  program         Program   @relation(fields: [programId], references: [id])
+  name            String    // e.g. "Batch 2024-2028 (BSN Year 2)"
+  currentSemester Int       @default(1)
+  startDate       DateTime?
+  students        Student[]
+  createdAt       DateTime  @default(now())
+}
+
+model Student {
+  id                       String                  @id @default(uuid())
+  rollNo                   String                  @unique // e.g. BSN-2024-001
+  registrationNo           String                  @unique // e.g. PNC-REG-88219
+  fullName                 String
+  fatherName               String
+  cnic                     String                  @unique
+  phone                    String
+  fatherPhone              String
+  email                    String?
+  bloodGroup               String?
+  address                  String?
+  programId                String
+  program                  Program                 @relation(fields: [programId], references: [id])
+  batchId                  String
+  batch                    Batch                   @relation(fields: [batchId], references: [id])
+  currentSemester          Int                     @default(1)
+  cgpa                     Float                   @default(3.5)
+  attendancePercent        Float                   @default(88.5)
+  clinicalAttendancePercent Float                  @default(89.0)
+  meritTier                Float                   @default(1.0)
+  status                   String                  @default("ACTIVE") // ACTIVE, PROBATION, SUSPENDED, GRADUATED
+  avatarUrl                String?
+  qrCodeData               String?
+  challans                 FeeChallan[]
+  payments                 FeePayment[]
+  competencyLogs           StudentCompetencyLog[]
+  attendanceRecords        StudentAttendance[]
+  createdAt                DateTime                @default(now())
+  updatedAt                DateTime                @updatedAt
+}
+
+model FeeStructure {
+  id                  String   @id @default(uuid())
+  programId           String
+  program             Program  @relation(fields: [programId], references: [id])
+  semester            Int
+  admissionFee        Float    @default(0)
+  tuitionFee          Float
+  clinicalHospitalFee Float
+  skillLabFee         Float
+  pncExamFee          Float    @default(5000)
+  dueDate             DateTime
+  lateFinePerDay      Float    @default(100)
+  createdAt           DateTime @default(now())
+}
+
+model FeeChallan {
+  id             String       @id @default(uuid())
+  challanNo      String       @unique // CHL-2026-XXXXX
+  studentId      String
+  student        Student      @relation(fields: [studentId], references: [id])
+  semester       Int
+  issueDate      DateTime     @default(now())
+  dueDate        DateTime
+  totalAmount    Float
+  lateFine       Float        @default(0)
+  discountAmount Float        @default(0)
+  netPayable     Float
+  paidAmount     Float        @default(0)
+  status         String       @default("UNPAID") // UNPAID, PARTIAL, PAID, OVERDUE
+  barcode        String?
+  payments       FeePayment[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model FeePayment {
+  id            String     @id @default(uuid())
+  receiptNo     String     @unique // RCPT-2026-XXXXX
+  challanId     String
+  challan       FeeChallan @relation(fields: [challanId], references: [id])
+  studentId     String
+  student       Student    @relation(fields: [studentId], references: [id])
+  amountPaid    Float
+  paymentMethod String     // CASH_COUNTER, BANK_CHALLAN, IBFT, JAZZCASH, EASYPAISA
+  transactionRef String?
+  cashierId     String     @default("CASH-01")
+  cashierName   String     @default("Accounts Desk")
+  notes         String?
+  printCount    Int        @default(1)
+  createdAt     DateTime   @default(now())
+}
+
+model CashierShiftClosing {
+  id                   String   @id @default(uuid())
+  cashierId            String
+  cashierName          String
+  shiftDate            DateTime @default(now())
+  openingCash          Float    @default(0)
+  totalCashCollected   Float    @default(0)
+  totalOnlineCollected Float    @default(0)
+  expectedCashInHand   Float    @default(0)
+  actualCashInHand     Float    @default(0)
+  discrepancy          Float    @default(0)
+  status               String   @default("OPEN") // OPEN, CLOSED, VERIFIED
+  remarks              String?
+  closedAt             DateTime?
+  createdAt            DateTime @default(now())
+}
+
+model Staff {
+  id                 String            @id @default(uuid())
+  empId              String            @unique // EMP-2026-XX
+  fullName           String
+  designation        String
+  department         String
+  category           String            @default("Teaching Staff") // Management, Teaching Staff, Support Staff
+  role               String            // OWNER, PRINCIPAL, VICE_PRINCIPAL, FACULTY, ADMIN, CASHIER, SUPPORT
+  cnic               String            @unique
+  phone              String
+  email              String?
+  qualification      String
+  pncLicenseNo       String?
+  pncLicenseExpiry   DateTime?
+  basicSalary        Float
+  clinicalAllowance  Float             @default(0)
+  medicalAllowance   Float             @default(0)
+  overtimeRate       Float             @default(500)
+  status             String            @default("ACTIVE") // ACTIVE, ON_LEAVE, RESIGNED
+  joinDate           DateTime?
+  attendanceRecords  StaffAttendance[]
+  payrollRecords     PayrollRecord[]
+  clinicalShifts     ClinicalShift[]
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
+
+model StaffAttendance {
+  id         String   @id @default(uuid())
+  staffId    String
+  staff      Staff    @relation(fields: [staffId], references: [id])
+  date       DateTime @default(now())
+  checkIn    String?
+  checkOut   String?
+  status     String   @default("PRESENT") // PRESENT, LATE, ABSENT, LEAVE
+  workHours  Float    @default(8.0)
+  createdAt  DateTime @default(now())
+}
+
+model PayrollRecord {
+  id                   String    @id @default(uuid())
+  staffId              String
+  staff                Staff     @relation(fields: [staffId], references: [id])
+  monthYear            String    // e.g. "October 2026"
+  basicSalary          Float
+  clinicalAllowance    Float     @default(0)
+  medicalAllowance     Float     @default(0)
+  overtimeHours        Float     @default(0)
+  overtimePay          Float     @default(0)
+  grossSalary          Float
+  unpaidLeaveDays      Int       @default(0)
+  unpaidLeaveDeduction Float     @default(0)
+  eobiDeduction        Float     @default(1500)
+  taxDeduction         Float     @default(0)
+  netSalary            Float
+  status               String    @default("DRAFT") // DRAFT, APPROVED, DISBURSED
+  disbursedAt          DateTime?
+  voucherRef           String?
+  createdAt            DateTime  @default(now())
+}
+
+model ApplicationDocument {
+  id                 String    @id @default(uuid())
+  documentNo         String    @unique // IINAHS/DOC/2026/XXXX
+  title              String
+  type               String    // LEAVE_APPLICATION, SHIFT_SWAP, FEE_CONCESSION, BONAFIDE_CERTIFICATE, PNC_REGULATORY, APPOINTMENT_LETTER, SHOW_CAUSE
+  applicantRole      String    // STUDENT, FACULTY, STAFF
+  applicantId        String
+  applicantName      String
+  contentEn          String
+  contentUr          String?
+  contentSd          String?
+  policyAlerts       String?
+  status             String    @default("DRAFT") // DRAFT, PENDING_HOD, PENDING_PRINCIPAL, APPROVED, REJECTED, ISSUED
+  approvedBy         String?
+  issuedAt           DateTime?
+  qrVerificationUrl  String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model ClinicalShift {
+  id          String   @id @default(uuid())
+  wardName    String   // e.g. "Imam Medical Center - Emergency / ICU", "Pediatric Ward", "General Surgery"
+  date        DateTime @default(now())
+  shiftType   String   // MORNING, EVENING, NIGHT
+  preceptorId String
+  preceptor   Staff    @relation(fields: [preceptorId], references: [id])
+  maxStudents Int      @default(10)
+  createdAt   DateTime @default(now())
+}
+
+model PatientTriageCase {
+  id                 String   @id @default(uuid())
+  mrNumber           String   @unique // IMC-MR-2026-XXXX
+  patientName        String
+  age                Int
+  gender             String   // MALE, FEMALE, OTHER
+  isPregnant         Boolean  @default(false)
+  chiefComplaint     String
+  respRate           Int
+  spo2               Float
+  onOxygen           Boolean  @default(false)
+  systolicBp         Int
+  diastolicBp        Int
+  heartRate          Int
+  temperature        Float
+  bloodSugar         Float?
+  painScale          Int      @default(0) // 0 - 10
+  avpuGcs            String   @default("ALERT") // ALERT, VOICE, PAIN, UNRESPONSIVE
+  news2Score         Int      @default(0)
+  news2Risk          String   @default("LOW") // LOW, MEDIUM, HIGH
+  esiLevel           Int      @default(3) // 1 to 5
+  redFlags           String?
+  triageCategory     String   @default("URGENT") // IMMEDIATE, VERY_URGENT, URGENT, STANDARD, NON_URGENT
+  triageNurseId      String   @default("NURSE-01")
+  triageNurseName    String   @default("Staff Nurse Shabana")
+  pairedStudentId    String?
+  pairedStudentName  String?
+  requiredCompetency String?
+  queueStatus        String   @default("WAITING") // WAITING, UNDER_CARE, DISCHARGED, ADMITTED
+  waitTimeMinutes    Int      @default(0)
+  bedNumber          String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model CompetencyRequirement {
+  id          String   @id @default(uuid())
+  code        String   @unique // IV_CANNULATION, FOLEY_CATHETER, ECG_12_LEAD, ABG_SAMPLING, WOUND_CARE, VITAL_MONITORING, MEDICATION_ADMIN
+  title       String
+  category    String   // Clinical Nursing, Critical Care, Diagnostic
+  minRequired Int      @default(20)
+  programCode String   @default("BSN")
+  semester    Int      @default(4)
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model StudentCompetencyLog {
+  id                 String   @id @default(uuid())
+  studentId          String
+  student            Student  @relation(fields: [studentId], references: [id])
+  patientCaseId      String?
+  competencyCode     String
+  competencyTitle    String
+  date               DateTime @default(now())
+  patientAgeGender   String?
+  supervisorId       String?
+  supervisorName     String
+  supervisorPin      String?
+  status             String   @default("PENDING_APPROVAL") // PENDING_APPROVAL, SIGNED_OFF, REJECTED
+  selfReflection     String?
+  supervisorFeedback String?
+  createdAt          DateTime @default(now())
+}
+
+model StudentAttendance {
+  id            String   @id @default(uuid())
+  studentId     String
+  student       Student  @relation(fields: [studentId], references: [id])
+  date          DateTime @default(now())
+  type          String   @default("THEORY_LECTURE") // THEORY_LECTURE, CLINICAL_WARD, SKILL_LAB
+  status        String   @default("PRESENT") // PRESENT, ABSENT, EXCUSED
+  hoursAttended Float    @default(4.0)
+  totalHours    Float    @default(4.0)
+  wardName      String?
+  verifiedBy    String?
+  createdAt     DateTime @default(now())
+}
+
+
+model AdmissionApplication {
+  id                  String   @id @default(uuid())
+  applicationNo       String   @unique // IMCAN-JCD-2026-XXXXX
+  fullName            String
+  fatherName          String
+  cnic                String
+  phone               String
+  fatherPhone         String?
+  email               String?
+  gender              String   @default("MALE") // MALE, FEMALE, OTHER
+  dob                 String?
+  address             String?
+  domicileDistrict    String?  @default("Jacobabad")
+  programCode         String   // BSN, XRAY, ECG, ICU, PHYSIO, PEADS, DENTAL, ANESTH, OPHTHALMIC, BLOOD_TRANSFUSION
+  programName         String
+  matricMarks         Int?
+  matricTotal         Int?     @default(1100)
+  fscMarks            Int?
+  fscTotal            Int?     @default(1100)
+  calculatedMerit     Float?
+  scholarshipCategory String?  @default("NONE") // NONE, PEEF, NEED_BASED, TCF_ALUMNI
+  status              String   @default("SUBMITTED") // SUBMITTED, UNDER_REVIEW, TEST_SCHEDULED, MERIT_LISTED, ADMITTED, REJECTED
+  testDate            String?  @default("Sunday, 22 November 2026 at 10:00 AM")
+  testCenter          String?  @default("Imam Institute Main Campus, Shah Ghazi Muhalla, Jacobabad")
+  qrSlipData          String?
+  convertedStudentId  String?
+  challanGenerated    Boolean  @default(false)
+  challanNo           String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model JobApplication {
+  id                   String   @id @default(uuid())
+  applicationNo        String   @unique // JOB-2026-XXXX
+  position             String   // Principal (MSN), Nursing Lecturer, Clinical Instructor, etc.
+  fullName             String
+  gender               String   @default("MALE")
+  email                String
+  phone                String
+  cnic                 String
+  highestQualification String   // MSN, PhD, BSN Generic, etc.
+  yearsExperience      Int      @default(0)
+  pncRegistrationNo    String?
+  currentOrganization  String?
+  coverLetter          String?
+  status               String   @default("PENDING_REVIEW") // PENDING_REVIEW, SHORTLISTED, INTERVIEWED, HIRED, ARCHIVED
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model ProgramWaitlist {
+  id          String   @id @default(uuid())
+  programCode String   // CMW, LHV, CNA
+  programName String
+  fullName    String
+  phone       String
+  email       String?
+  city        String   @default("Jacobabad")
+  notifyVia   String   @default("WHATSAPP") // WHATSAPP, SMS, EMAIL
+  status      String   @default("WAITING")
+  createdAt   DateTime @default(now())
+}
+
+model PublicInquiry {
+  id        String   @id @default(uuid())
+  fullName  String
+  phone     String
+  email     String?
+  subject   String
+  message   String
+  status    String   @default("NEW") // NEW, IN_PROGRESS, RESOLVED
+  createdAt DateTime @default(now())
+}

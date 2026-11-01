@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Offline | Imam Institute Smart ERP</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #062B54;
+      color: #F8FAFC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 24px;
+    }
+    .offline-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 36px 24px;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .badge {
+      display: inline-block;
+      background: #E30613;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0 0 10px 0;
+      color: #FFFFFF;
+    }
+    p {
+      color: #94A3B8;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .btn {
+      background: #0062B1;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #004d8c;
+    }
+  </style>
+</head>
+<body>
+  <div class="offline-card">
+    <div class="badge">Offline Cached Mode</div>
+    <h1>Imam Institute Smart ERP</h1>
+    <p>You are currently operating without an active campus internet connection. Cached student files, ledger entries, and emergency triage records remain accessible locally.</p>
+    <button class="btn" onclick="window.location.reload()">Check Campus Network</button>
+  </div>
+</body>
+</html>
