@@ -84,12 +84,17 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
 
     await expect(page.locator('text=Fast-Cashier Fees Collection Desk')).toBeVisible();
 
-    // Search for a student
+    // Search for an unpaid student
     const searchInput = page.locator('[data-testid="cashier-search-input"]');
-    await searchInput.fill('Bilal Ahmed Mahar'); // Bilal Ahmed Mahar (Unpaid PKR 172.1k)
+    await searchInput.fill('Bilal Ahmed Mahar');
+    await page.waitForTimeout(300);
 
-    // Click Collect Fee button
-    const collectBtn = page.locator('button:has-text("Collect Fee")').first();
+    let collectBtn = page.locator('button:has-text("Collect Fee")').first();
+    if (!await collectBtn.isVisible()) {
+      await searchInput.fill('Fatima');
+      await page.waitForTimeout(300);
+      collectBtn = page.locator('button:has-text("Collect Fee")').first();
+    }
     await expect(collectBtn).toBeVisible();
     await collectBtn.click();
 

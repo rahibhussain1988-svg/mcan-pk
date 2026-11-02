@@ -51,12 +51,12 @@ export const Header: React.FC<HeaderProps> = ({
   const cashierUser = supportUsers.find((u) => u.role === 'CASHIER');
 
   return (
-    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2">
+    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-2.5 sm:px-6 py-2 sm:py-2.5 flex items-center justify-between gap-1.5 sm:gap-2">
       {/* Left Brand and Mobile Crest + Public Return Button */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-imam-navy hover:text-white text-slate-700 rounded-xl text-xs font-bold transition border border-slate-200 shadow-2xs group shrink-0"
+          className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-slate-100 hover:bg-imam-navy hover:text-white text-slate-700 rounded-xl text-[11px] sm:text-xs font-bold transition border border-slate-200 shadow-2xs group shrink-0"
           title="Return to Official Public Website (imcan.pk)"
         >
           <Globe size={13} className="text-imam-blue group-hover:text-white shrink-0" />
@@ -64,10 +64,10 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="sm:hidden">← Site</span>
         </Link>
 
-        <div className="md:hidden flex items-center gap-2">
-          <ImamCrestLogo size={32} showText={false} />
-          <div>
-            <span className="font-black text-slate-900 text-xs uppercase tracking-tight block leading-tight">
+        <div className="md:hidden flex items-center gap-1.5 shrink-0">
+          <ImamCrestLogo size={28} showText={false} />
+          <div className="hidden xs:block">
+            <span className="font-black text-slate-900 text-[11px] uppercase tracking-tight block leading-tight">
               IMAM ERP
             </span>
             <span className="text-[9px] font-semibold text-imam-blue block leading-tight">
@@ -160,12 +160,12 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Right Controls: Copilot AI, Language Toggle, Personnel Switcher & Avatar */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
         {/* Slide-Over Imam AI Copilot Button */}
         <button
           onClick={onOpenCopilot}
           data-testid="open-copilot-btn"
-          className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-sm transition active:scale-95"
+          className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 p-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-sm transition active:scale-95 shrink-0"
           title="Open Imam AI Executive Copilot (Ctrl+I)"
         >
           <Sparkles size={14} className="animate-pulse" />
@@ -200,13 +200,13 @@ export const Header: React.FC<HeaderProps> = ({
         )}
 
         {/* Institutional Personnel Switcher (Dropdown) */}
-        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200/80">
-          <Shield size={14} className="text-imam-blue ml-1.5 hidden sm:inline-block" />
+        <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-100 p-0.5 sm:p-1 rounded-xl text-xs font-bold border border-slate-200/80 shrink-0">
+          <Shield size={14} className="text-imam-blue ml-1 hidden sm:inline-block" />
           <select
             value={currentUserId}
             onChange={(e) => onSwitchUser(e.target.value)}
             data-testid="role-switcher-select"
-            className="bg-white text-slate-900 rounded-lg px-2.5 py-1 text-xs font-bold border border-slate-200 shadow-sm focus:outline-none cursor-pointer max-w-[170px] sm:max-w-[260px] truncate"
+            className="bg-white text-slate-900 rounded-lg px-1.5 sm:px-2.5 py-1 text-[11px] sm:text-xs font-bold border border-slate-200 shadow-sm focus:outline-none cursor-pointer max-w-[100px] xs:max-w-[130px] sm:max-w-[200px] lg:max-w-[260px] truncate"
           >
             {managementUsers.length > 0 && (
               <optgroup label="Management (Executive Board)">
@@ -259,7 +259,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Profile Avatar Button */}
         <button
           onClick={() => onSelectTab('profile')}
-          className="w-8 h-8 rounded-xl bg-imam-navy text-white font-bold text-xs flex items-center justify-center border border-slate-200 shadow-sm hover:scale-105 transition shrink-0"
+          className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-imam-navy text-white font-bold text-[11px] sm:text-xs flex items-center justify-center border border-slate-200 shadow-sm hover:scale-105 transition shrink-0 cursor-pointer"
           title={`Active User: ${activeUser?.fullName} (${activeUser?.designation})`}
         >
           {activeUser?.fullName.charAt(0) || 'U'}
