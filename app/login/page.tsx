@@ -106,6 +106,45 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* Dedicated Entry Banners */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <Link
+            href="/student-login"
+            className="p-4 rounded-2xl bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/30 transition flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold">
+                <GraduationCap size={20} />
+              </div>
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-blue-300">
+                  Dedicated Student Portal Login
+                </h3>
+                <p className="text-[11px] text-slate-400">Roll number, attendance &amp; challan downloads</p>
+              </div>
+            </div>
+            <ArrowRight size={16} className="text-blue-400 group-hover:translate-x-1 transition-transform" />
+          </Link>
+
+          <Link
+            href="/erp-login"
+            className="p-4 rounded-2xl bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/30 transition flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold">
+                <ShieldCheck size={20} />
+              </div>
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300">
+                  Administrative &amp; Faculty ERP Gateway
+                </h3>
+                <p className="text-[11px] text-slate-400">Chairman, Dean, Accounts, Preceptors &amp; Triage</p>
+              </div>
+            </div>
+            <ArrowRight size={16} className="text-indigo-400 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {portalRoles.map((portal) => {
             const Icon = portal.icon;

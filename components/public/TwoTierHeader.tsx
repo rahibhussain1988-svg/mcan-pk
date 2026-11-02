@@ -312,10 +312,28 @@ export const TwoTierHeader: React.FC<TwoTierHeaderProps> = ({
                     Dr. Abid Hussain Soomro (CEO Message)
                   </Link>
                   <Link
-                    href="/about#vision-mission"
+                    href="/faculty"
                     className="block px-3 py-2 rounded-xl hover:bg-slate-50 text-xs font-bold text-slate-800 hover:text-imam-blue"
                   >
-                    Vision &amp; Mission
+                    Faculty &amp; Leadership
+                  </Link>
+                  <Link
+                    href="/departments"
+                    className="block px-3 py-2 rounded-xl hover:bg-slate-50 text-xs font-bold text-slate-800 hover:text-imam-blue"
+                  >
+                    Academic Departments
+                  </Link>
+                  <Link
+                    href="/facilities"
+                    className="block px-3 py-2 rounded-xl hover:bg-slate-50 text-xs font-bold text-slate-800 hover:text-imam-blue"
+                  >
+                    Infrastructure &amp; Campus Facilities
+                  </Link>
+                  <Link
+                    href="/gallery"
+                    className="block px-3 py-2 rounded-xl hover:bg-slate-50 text-xs font-bold text-slate-800 hover:text-imam-blue"
+                  >
+                    Photo Gallery &amp; Campus Life
                   </Link>
                   <Link
                     href="/about#accreditations"
@@ -438,14 +456,14 @@ export const TwoTierHeader: React.FC<TwoTierHeaderProps> = ({
               href="/admissions"
               className="px-3 py-2 rounded-xl hover:text-imam-blue hover:bg-slate-50 transition"
             >
-              Merit &amp; AI Tools
+              Admissions
             </Link>
 
             <Link
-              href="/news-careers"
+              href="/news"
               className="px-3 py-2 rounded-xl hover:text-imam-blue hover:bg-slate-50 transition"
             >
-              Campus &amp; News
+              News &amp; Events
             </Link>
 
             <Link
@@ -521,6 +539,34 @@ export const TwoTierHeader: React.FC<TwoTierHeaderProps> = ({
                 About Institute &amp; CEO Message
               </Link>
               <Link
+                href="/faculty"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-xl text-sm font-bold text-slate-800 hover:bg-slate-100"
+              >
+                Faculty &amp; Leadership
+              </Link>
+              <Link
+                href="/departments"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-xl text-sm font-bold text-slate-800 hover:bg-slate-100"
+              >
+                Academic Departments
+              </Link>
+              <Link
+                href="/facilities"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-xl text-sm font-bold text-slate-800 hover:bg-slate-100"
+              >
+                Campus Facilities &amp; Labs
+              </Link>
+              <Link
+                href="/gallery"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-xl text-sm font-bold text-slate-800 hover:bg-slate-100"
+              >
+                Photo Gallery &amp; Campus Life
+              </Link>
+              <Link
                 href="/programs"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block px-4 py-2.5 rounded-xl text-sm font-bold text-slate-800 hover:bg-slate-100"
@@ -542,11 +588,18 @@ export const TwoTierHeader: React.FC<TwoTierHeaderProps> = ({
                 Merit Calculator &amp; Admissions
               </Link>
               <Link
-                href="/news-careers"
+                href="/admissions/apply"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-xl text-sm font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100"
+              >
+                Apply Online (Admission Form)
+              </Link>
+              <Link
+                href="/news"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block px-4 py-2.5 rounded-xl text-sm font-bold text-slate-800 hover:bg-slate-100"
               >
-                News &amp; Principal (MSN) Hiring
+                News, Circulars &amp; Careers
               </Link>
               <Link
                 href="/contact"
@@ -555,19 +608,44 @@ export const TwoTierHeader: React.FC<TwoTierHeaderProps> = ({
               >
                 Contact &amp; Jacobabad Campus
               </Link>
-              <Link
-                href="/erp"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-bold text-imam-blue bg-blue-50 border border-blue-200/80"
-              >
-                <span className="flex items-center gap-2">
-                  <Globe size={16} />
-                  <span>Smart Campus ERP &amp; Portals</span>
-                </span>
-                <span className="text-[10px] uppercase font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                  Live System
-                </span>
-              </Link>
+
+              <div className="pt-2 border-t border-slate-100 space-y-1.5">
+                <Link
+                  href="/student-login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-bold text-blue-700 bg-blue-50/90 border border-blue-200"
+                >
+                  <span className="flex items-center gap-2">
+                    <GraduationCap size={16} />
+                    <span>Student Portal Login</span>
+                  </span>
+                  <span className="text-[10px] font-bold text-blue-600">Enter →</span>
+                </Link>
+                <Link
+                  href="/erp-login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200"
+                >
+                  <span className="flex items-center gap-2">
+                    <ShieldCheck size={16} />
+                    <span>Faculty &amp; Staff ERP Login</span>
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-600">Enter →</span>
+                </Link>
+                <Link
+                  href="/erp"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-bold text-imam-blue bg-blue-50 border border-blue-200/80"
+                >
+                  <span className="flex items-center gap-2">
+                    <Globe size={16} />
+                    <span>Smart Campus ERP &amp; Portals</span>
+                  </span>
+                  <span className="text-[10px] uppercase font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                    Live System
+                  </span>
+                </Link>
+              </div>
             </div>
 
             {/* Quick Actions in Mobile Drawer */}

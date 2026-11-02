@@ -283,4 +283,131 @@ test.describe('Imam Institute Official Public Website (imcan.pk) & ERP Bridge Su
     await expect(page.locator('text=Contact & Visit Campus')).toBeVisible();
     await expect(page.locator('text=Shah Ghazi Muhalla, Imam Baksh Road').first()).toBeVisible();
   });
+
+  test('Public Institutional Pages (/faculty, /departments, /facilities, /gallery, /news)', async ({ page }) => {
+    // 1. /faculty & /faculty-management
+    await page.goto('/faculty');
+    await expect(page.locator('text=Faculty & Executive Management')).toBeVisible();
+    await expect(page.locator('text=Dr. Abid Hussain Soomro').first()).toBeVisible();
+    await expect(page.locator('text=Vinod Kumar').first()).toBeVisible();
+
+    // Test Search filter in faculty roster
+    const facultySearch = page.locator('input[placeholder*="Search faculty name"]');
+    await facultySearch.fill('Vinod');
+    await expect(page.locator('text=Vinod Kumar').first()).toBeVisible();
+
+    // Verify alias /faculty-management works
+    await page.goto('/faculty-management');
+    await expect(page.locator('text=Faculty & Executive Management')).toBeVisible();
+
+    // 2. /departments
+    await page.goto('/departments');
+    await expect(page.locator('text=Academic & Clinical Departments')).toBeVisible();
+    await expect(page.locator('text=Department of Nursing Sciences').first()).toBeVisible();
+    await expect(page.locator('text=Department of Clinical Skills & Simulation').first()).toBeVisible();
+    await expect(page.locator('text=Hospital Clinical Services').first()).toBeVisible();
+
+    // 3. /facilities
+    await page.goto('/facilities');
+    await expect(page.locator('text=State-of-the-Art Facilities & Labs')).toBeVisible();
+    await expect(page.locator('text=High-Fidelity Nursing Skills & Simulation Lab')).toBeVisible();
+    await expect(page.locator('text=Dedicated Student Transport Fleet')).toBeVisible();
+
+    // 4. /gallery
+    await page.goto('/gallery');
+    await expect(page.locator('text=Institutional Photo Gallery')).toBeVisible();
+    await expect(page.locator('text=Nursing Scholars White Coat & Capping Ceremony').first()).toBeVisible();
+
+    // Test gallery category filter
+    const clinicalTab = page.locator('button:has-text("Hospital Clinical Training")').first();
+    await clinicalTab.click();
+    await page.waitForTimeout(300);
+    await expect(page.locator('text=Bedside Emergency Triage Simulation at IMC').first()).toBeVisible();
+
+    // Test gallery lightbox modal
+    const firstImgCard = page.locator('text=View High-Res').first();
+    await firstImgCard.click();
+    await expect(page.locator('button:has-text("Close Preview")')).toBeVisible();
+    await page.locator('button:has-text("Close Preview")').click();
+
+    // 5. /news
+    await page.goto('/news');
+    await expect(page.locator('text=News, Notifications & Announcements')).toBeVisible();
+    await expect(page.locator('text=Fall 2026 Admissions Open').first()).toBeVisible();
+    await expect(page.locator('text=SMBBMU Larkana Semester Examination Date Sheet').first()).toBeVisible();
+
+    // Test search filter on news
+    const newsSearch = page.locator('input[placeholder*="Search circulars"]');
+    await newsSearch.fill('Examination');
+    await expect(page.locator('text=SMBBMU Larkana Semester Examination Date Sheet').first()).toBeVisible();
+  });
+
+  test('Dedicated Online Application Route (/admissions/apply & /apply)', async ({ page }) => {
+    // Test alias route /apply
+    await page.goto('/apply');
+    await expect(page.locator('text=Official Online Admission Application')).toBeVisible();
+    await expect(page.locator('text=Step 1: Personal & Identification Details')).toBeVisible();
+
+    // Fill Step 1
+    await page.fill('input[placeholder*="Ayesha Noor"]', 'Kashif Ali Soomro');
+    await page.fill('input[placeholder*="Ghulam Rasool"]', 'Ghulam Rasool Soomro');
+    await page.fill('input[placeholder*="43102-"]', '42401-9988776-5');
+    await page.fill('input[placeholder*="0300-1234567"]', '0300-9876543');
+    await page.fill('input[placeholder*="0300-7654321"]', '0301-8765432');
+    await page.fill('input[placeholder*="candidate@gmail.com"]', 'kashif.soomro@example.com');
+    await page.fill('input[placeholder*="Muhalla, Street"]', 'Mohalla Soomra, Jacobabad, Sindh');
+
+    await page.locator('button:has-text("Continue to Academic Merit")').click();
+
+    // Step 2: Program Choice & Academic Scores
+    await expect(page.locator('text=Step 2: Program Choice & Educational Record')).toBeVisible();
+    await page.locator('button:has-text("Continue to Review")').click();
+
+    // Step 3: Review and Submit
+    await expect(page.locator('text=Step 3: Scholarship Category & Final Confirmation')).toBeVisible();
+    await expect(page.locator('text=Kashif Ali Soomro')).toBeVisible();
+
+    // Submit
+    await page.locator('button:has-text("Submit & Generate Official Admit Slip")').click();
+
+    // Verify Generated Slip
+    await expect(page.locator('text=Admission Registered Successfully!')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text=OFFICIAL CAMPUS ENTRY TEST ADMIT SLIP')).toBeVisible();
+    await expect(page.locator('text=Kashif Ali Soomro').first()).toBeVisible();
+    await expect(page.locator('img[alt="Admit Slip QR Code"]')).toBeVisible();
+  });
+
+  test('Dedicated Portal Login Gateways (/student-login & /erp-login)', async ({ page }) => {
+    // 1. /student-login
+    await page.goto('/student-login');
+    await expect(page.locator('text=Student Self-Service Portal').first()).toBeVisible();
+    await expect(page.locator('text=Access Your Academic & Clinical Records')).toBeVisible();
+
+    // Test quick demo student selector
+    const studentFarhan = page.locator('button:has-text("Farhan Ali Soomro")');
+    await studentFarhan.click();
+    await expect(page.locator('input[value="STU-2025-XRAY-007"]')).toBeVisible();
+
+    // Click Sign In
+    await page.locator('button:has-text("Sign In to Student Portal")').click();
+    await page.waitForURL('**/erp?role=student&tab=student&studentId=STU-2025-XRAY-007', { timeout: 10000 });
+    await expect(page.locator('text=Digital QR ID Pass')).toBeVisible();
+
+    // 2. /erp-login
+    await page.goto('/erp-login');
+    await expect(page.locator('text=Administrative & Faculty ERP Gateway')).toBeVisible();
+    await expect(page.locator('text=Executive Command & Chairman')).toBeVisible();
+    await expect(page.locator('text=Fast-Cashier & Accounts Desk')).toBeVisible();
+    await expect(page.locator('text=Clinical Preceptor & Ward Supervisor')).toBeVisible();
+
+    // Click Cashier Desk Profile
+    const cashierCard = page.locator('h3:has-text("Fast-Cashier & Accounts Desk")');
+    await cashierCard.click();
+    await expect(page.locator('input[value="accounts@imcan.pk"]')).toBeVisible();
+
+    // Click Enter ERP System
+    await page.locator('button:has-text("Enter ERP System")').click();
+    await page.waitForURL('**/erp?role=accounts&tab=fees', { timeout: 10000 });
+    await expect(page.locator('text=Fast-Cashier Fees Collection Desk')).toBeVisible();
+  });
 });

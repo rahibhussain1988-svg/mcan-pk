@@ -49,17 +49,17 @@ export const PublicFooter: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
           {/* Col 1: Institutional Identity */}
-          <div className="lg:col-span-4 space-y-4">
+          <div className="lg:col-span-3 space-y-4">
             <Link href="/" className="inline-flex items-center gap-3">
-              <ImamCrestLogo size={48} showText={false} />
+              <ImamCrestLogo size={44} showText={false} />
               <div>
                 <div className="text-sm font-black tracking-tight text-white uppercase">
                   IMAM INSTITUTE
                 </div>
-                <div className="text-[11px] font-extrabold text-blue-400 uppercase tracking-tight">
+                <div className="text-[10px] font-extrabold text-blue-400 uppercase tracking-tight">
                   OF NURSING &amp; ALLIED HEALTH SCIENCES
                 </div>
-                <div className="text-[10px] text-slate-400">
+                <div className="text-[9px] text-slate-400">
                   And Paramedical · Established 2019
                 </div>
               </div>
@@ -70,8 +70,8 @@ export const PublicFooter: React.FC = () => {
             </p>
 
             {/* CEO Quote Pill */}
-            <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800">
-              <p className="text-[11px] text-slate-300 italic leading-relaxed">
+            <div className="p-3 rounded-2xl bg-slate-900 border border-slate-800">
+              <p className="text-[10px] text-slate-300 italic leading-relaxed">
                 &ldquo;{INSTITUTIONAL_DATA.leadership.ceo.quote}&rdquo;
               </p>
               <div className="text-[10px] font-bold text-blue-400 mt-1">
@@ -81,7 +81,7 @@ export const PublicFooter: React.FC = () => {
           </div>
 
           {/* Col 2: Academic Programs */}
-          <div className="lg:col-span-3 space-y-3">
+          <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs font-black uppercase tracking-wider text-slate-300">
               Academic Programs
             </h4>
@@ -89,46 +89,74 @@ export const PublicFooter: React.FC = () => {
               <li>
                 <Link href="/programs#bsn" className="hover:text-white transition flex items-center gap-1.5">
                   <span className="text-imam-blue">›</span>
-                  <strong className="text-slate-200">BS Nursing (Generic)</strong> — 4 Years
+                  <strong className="text-slate-200">BS Nursing</strong>
                 </Link>
               </li>
               <li>
                 <Link href="/programs#xray" className="hover:text-white transition flex items-center gap-1.5">
                   <span className="text-imam-red">›</span>
-                  <span>X-Ray Technician (1-Year Diploma)</span>
+                  <span>X-Ray Technician</span>
                 </Link>
               </li>
               <li>
                 <Link href="/programs#icu" className="hover:text-white transition flex items-center gap-1.5">
                   <span className="text-imam-red">›</span>
-                  <span>ICU Technician (1-Year Diploma)</span>
+                  <span>ICU Technician</span>
                 </Link>
               </li>
               <li>
                 <Link href="/programs#ecg" className="hover:text-white transition flex items-center gap-1.5">
                   <span className="text-imam-red">›</span>
-                  <span>ECG Technician (1-Year Diploma)</span>
+                  <span>ECG Technician</span>
                 </Link>
               </li>
               <li>
-                <Link href="/programs#paramedical" className="hover:text-white transition flex items-center gap-1.5">
-                  <span className="text-imam-red">›</span>
-                  <span>Physiotherapy, Dental &amp; PEADS</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/programs#upcoming" className="hover:text-white transition flex items-center gap-1.5">
-                  <span className="text-blue-400">›</span>
-                  <span className="text-blue-300 font-semibold">CMW, LHV &amp; CNA Waitlist</span>
+                <Link href="/admissions/apply" className="hover:text-white transition flex items-center gap-1.5 font-bold text-emerald-400">
+                  <span>›</span>
+                  <span>Apply Online (Form)</span>
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Clinical Affiliations */}
+          {/* Col 3: Campus & Directory */}
           <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs font-black uppercase tracking-wider text-slate-300">
-              Clinical Training
+              Campus Directory
+            </h4>
+            <ul className="text-xs text-slate-400 space-y-2">
+              <li>
+                <Link href="/faculty" className="hover:text-white transition">
+                  Faculty &amp; Leadership
+                </Link>
+              </li>
+              <li>
+                <Link href="/departments" className="hover:text-white transition">
+                  Academic Departments
+                </Link>
+              </li>
+              <li>
+                <Link href="/facilities" className="hover:text-white transition">
+                  Labs &amp; Facilities
+                </Link>
+              </li>
+              <li>
+                <Link href="/gallery" className="hover:text-white transition">
+                  Photo Gallery
+                </Link>
+              </li>
+              <li>
+                <Link href="/news" className="hover:text-white transition">
+                  News &amp; Circulars
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Clinical Training & Portals */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="text-xs font-black uppercase tracking-wider text-slate-300">
+              Clinical &amp; Portals
             </h4>
             <ul className="text-xs text-slate-400 space-y-2">
               <li>
@@ -141,29 +169,28 @@ export const PublicFooter: React.FC = () => {
                   JIMS (133-Bed Hospital)
                 </Link>
               </li>
-              <li>
-                <Link href="/clinical-training" className="hover:text-white transition">
-                  Civil Hospital Jacobabad
-                </Link>
-              </li>
-              <li>
-                <Link href="/clinical-training" className="hover:text-white transition">
-                  GMMMC Sukkur (House Job)
-                </Link>
-              </li>
-              <li className="pt-2">
+              <li className="pt-1">
                 <Link
-                  href="/login"
+                  href="/student-login"
                   className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-400 hover:text-white transition"
                 >
                   <Globe size={12} />
-                  <span>Launch ERP Suite →</span>
+                  <span>Student Portal →</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/erp-login"
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 hover:text-white transition"
+                >
+                  <Globe size={12} />
+                  <span>Faculty/ERP Login →</span>
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Contact & Campus Info */}
+          {/* Col 5: Contact & Campus Info */}
           <div className="lg:col-span-3 space-y-3 text-xs">
             <h4 className="text-xs font-black uppercase tracking-wider text-slate-300">
               Jacobabad Campus
@@ -198,17 +225,21 @@ export const PublicFooter: React.FC = () => {
           <div>
             © {new Date().getFullYear()} Imam Institute of Nursing &amp; Allied Health Sciences. Approved by Govt of Sindh · Registered with PNMC · Affiliated with SMBBMU Larkana &amp; SMF Karachi.
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <Link href="/admissions" className="hover:text-slate-400">
-              Admissions Policy
+              Admissions
             </Link>
             <span>•</span>
-            <Link href="/news-careers" className="hover:text-slate-400">
-              Careers (MSN Principal)
+            <Link href="/apply" className="hover:text-slate-400 font-semibold text-emerald-400">
+              Apply Online
             </Link>
             <span>•</span>
-            <Link href="/login" className="hover:text-slate-400 font-bold text-slate-300">
-              Staff &amp; Student Portals
+            <Link href="/student-login" className="hover:text-slate-400 text-blue-300">
+              Student Portal
+            </Link>
+            <span>•</span>
+            <Link href="/erp-login" className="hover:text-slate-400 font-bold text-slate-300">
+              ERP Gateway
             </Link>
           </div>
         </div>
