@@ -209,7 +209,7 @@ export const ClinicalGovernanceView: React.FC<ClinicalGovernanceViewProps> = ({
       </div>
 
       {/* Sub-Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveTab('DEPARTMENTS')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${

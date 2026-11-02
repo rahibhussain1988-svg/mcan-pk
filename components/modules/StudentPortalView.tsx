@@ -210,10 +210,10 @@ export const StudentPortalView: React.FC<StudentPortalProps> = ({ student: initi
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl text-xs font-bold max-w-xl">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-slate-100 p-1.5 rounded-2xl text-xs font-bold w-full max-w-2xl">
         <button
           onClick={() => setActiveTab('OVERVIEW')}
-          className={`flex-1 py-2 rounded-xl transition ${
+          className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center text-center ${
             activeTab === 'OVERVIEW' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -222,7 +222,7 @@ export const StudentPortalView: React.FC<StudentPortalProps> = ({ student: initi
         <button
           onClick={() => setActiveTab('ATTENDANCE')}
           data-testid="tab-attendance-btn"
-          className={`flex-1 py-2 rounded-xl transition ${
+          className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center text-center ${
             activeTab === 'ATTENDANCE' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -231,7 +231,7 @@ export const StudentPortalView: React.FC<StudentPortalProps> = ({ student: initi
         <button
           onClick={() => setActiveTab('LOGBOOK')}
           data-testid="tab-logbook-btn"
-          className={`flex-1 py-2 rounded-xl transition ${
+          className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center text-center ${
             activeTab === 'LOGBOOK' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -240,11 +240,12 @@ export const StudentPortalView: React.FC<StudentPortalProps> = ({ student: initi
         <button
           onClick={() => setActiveTab('AI_COACH')}
           data-testid="tab-ai-coach-btn"
-          className={`flex-1 py-2 rounded-xl transition flex items-center justify-center gap-1.5 ${
+          className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-center ${
             activeTab === 'AI_COACH' ? 'bg-imam-blue text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Sparkles size={13} /> AI Viva Coach
+          <Sparkles size={13} className="shrink-0" />
+          <span>AI Viva Coach</span>
         </button>
       </div>
 

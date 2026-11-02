@@ -187,67 +187,71 @@ export const AcademicManagementView: React.FC<AcademicManagementViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Header Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-imam-blue/10 text-imam-blue border border-imam-blue/20">
-              PNC & SMF Affiliated
+              PNC &amp; SMF Affiliated
             </span>
             <span className="text-xs text-slate-400 font-mono">Academic Cycle 2025–2026</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">
-            Academic & Examination Management
+            Academic &amp; Examination Management
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Curriculum syllabi, weekly lecture & clinical ward timetables, examination grading, and official transcripts.
+          <p className="text-xs text-slate-500 mt-0.5 max-w-2xl">
+            Curriculum syllabi, weekly lecture &amp; clinical ward timetables, examination grading, and official transcripts.
           </p>
         </div>
 
         {/* Global Tab Navigation */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200 self-start md:self-auto overflow-x-auto max-w-full">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200 w-full lg:w-auto shrink-0">
           <button
             onClick={() => setActiveTab('CURRICULUM')}
             data-testid="academic-tab-curriculum"
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-center ${
               activeTab === 'CURRICULUM'
                 ? 'bg-imam-blue text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            <BookOpen size={14} /> Curriculum ({initialSubjects.length})
+            <BookOpen size={14} className="shrink-0" />
+            <span>Curriculum ({initialSubjects.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('TIMETABLE')}
             data-testid="academic-tab-timetable"
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-center ${
               activeTab === 'TIMETABLE'
                 ? 'bg-imam-blue text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            <Calendar size={14} /> Weekly Timetable
+            <Calendar size={14} className="shrink-0" />
+            <span>Weekly Timetable</span>
           </button>
           <button
             onClick={() => setActiveTab('EXAMS')}
             data-testid="academic-tab-exams"
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-center ${
               activeTab === 'EXAMS'
                 ? 'bg-imam-blue text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            <Award size={14} /> Exams & Grading
+            <Award size={14} className="shrink-0" />
+            <span>Exams &amp; Grading</span>
           </button>
           <button
             onClick={() => setActiveTab('TRANSCRIPT')}
             data-testid="academic-tab-transcript"
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-center ${
               activeTab === 'TRANSCRIPT'
                 ? 'bg-imam-blue text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
-            <GraduationCap size={14} /> Official Transcripts
+            <GraduationCap size={14} className="shrink-0" />
+            <span>Official Transcripts</span>
           </button>
         </div>
       </div>

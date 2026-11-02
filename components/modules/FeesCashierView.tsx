@@ -213,10 +213,10 @@ export const FeesCashierView: React.FC<FeesCashierViewProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:items-center gap-1.5 bg-slate-100 p-1.5 rounded-xl text-xs font-bold w-full lg:w-auto">
             <button
               onClick={() => setActiveTab('ALL')}
-              className={`px-3 py-1.5 rounded-lg transition ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition text-center justify-center flex items-center ${
                 activeTab === 'ALL' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -225,7 +225,7 @@ export const FeesCashierView: React.FC<FeesCashierViewProps> = ({
             <button
               onClick={() => setActiveTab('OVERDUE')}
               data-testid="filter-overdue-btn"
-              className={`px-3 py-1.5 rounded-lg transition ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition text-center justify-center flex items-center ${
                 activeTab === 'OVERDUE'
                   ? 'bg-rose-600 text-white shadow-sm'
                   : 'text-rose-700 hover:bg-rose-50'
@@ -235,7 +235,7 @@ export const FeesCashierView: React.FC<FeesCashierViewProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('PARTIAL')}
-              className={`px-3 py-1.5 rounded-lg transition ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition text-center justify-center flex items-center ${
                 activeTab === 'PARTIAL'
                   ? 'bg-amber-600 text-white shadow-sm'
                   : 'text-amber-700 hover:bg-amber-50'
@@ -245,7 +245,7 @@ export const FeesCashierView: React.FC<FeesCashierViewProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('PAID')}
-              className={`px-3 py-1.5 rounded-lg transition ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition text-center justify-center flex items-center ${
                 activeTab === 'PAID'
                   ? 'bg-emerald-600 text-white shadow-sm'
                   : 'text-emerald-700 hover:bg-emerald-50'

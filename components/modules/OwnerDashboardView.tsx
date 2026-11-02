@@ -113,7 +113,7 @@ export const OwnerDashboardView: React.FC<OwnerDashboardProps> = ({ initialData 
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs text-sky-200 font-medium">Brief Language:</span>
               <div className="bg-black/30 p-1 rounded-xl flex items-center border border-white/10">
                 <button
@@ -416,7 +416,7 @@ export const OwnerDashboardView: React.FC<OwnerDashboardProps> = ({ initialData 
                 className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-imam-blue/40 transition flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700 uppercase">
                       {item.type.replace(/_/g, ' ')}
                     </span>
@@ -442,7 +442,7 @@ export const OwnerDashboardView: React.FC<OwnerDashboardProps> = ({ initialData 
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <button
                       onClick={() => handleReject(item.id)}
                       disabled={isProcessing === item.id}

@@ -249,11 +249,11 @@ export const DoubleEntryLedgerView: React.FC<DoubleEntryLedgerViewProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl text-xs font-bold max-w-xl">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-slate-100 p-1.5 rounded-2xl text-xs font-bold w-full max-w-2xl">
         <button
           onClick={() => setActiveTab('ENTRIES')}
           data-testid="tab-journal-entries"
-          className={`flex-1 py-2 rounded-xl transition ${
+          className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center text-center ${
             activeTab === 'ENTRIES' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -262,7 +262,7 @@ export const DoubleEntryLedgerView: React.FC<DoubleEntryLedgerViewProps> = ({
         <button
           onClick={() => setActiveTab('COA')}
           data-testid="tab-chart-accounts"
-          className={`flex-1 py-2 rounded-xl transition ${
+          className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center text-center ${
             activeTab === 'COA' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -271,7 +271,7 @@ export const DoubleEntryLedgerView: React.FC<DoubleEntryLedgerViewProps> = ({
         <button
           onClick={() => setActiveTab('TRIAL_BALANCE')}
           data-testid="tab-trial-balance"
-          className={`flex-1 py-2 rounded-xl transition ${
+          className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center text-center ${
             activeTab === 'TRIAL_BALANCE' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -280,7 +280,7 @@ export const DoubleEntryLedgerView: React.FC<DoubleEntryLedgerViewProps> = ({
         <button
           onClick={() => setActiveTab('STATEMENTS')}
           data-testid="tab-financial-statements"
-          className={`flex-1 py-2 rounded-xl transition ${
+          className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center text-center ${
             activeTab === 'STATEMENTS' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >

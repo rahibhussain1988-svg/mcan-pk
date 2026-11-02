@@ -201,14 +201,14 @@ export const InventoryStoresView: React.FC<InventoryStoresViewProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full sm:w-auto shrink-0">
           <button
             onClick={() => {
               setReceiptForm((p) => ({ ...p, itemId: items[0]?.id || '' }));
               setIsReceiptModalOpen(true);
             }}
             data-testid="btn-grn-receipt"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex items-center gap-1.5 shadow-sm"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-center"
           >
             <ArrowDownLeft size={15} /> Receive Stock (GRN)
           </button>
@@ -218,7 +218,7 @@ export const InventoryStoresView: React.FC<InventoryStoresViewProps> = ({
               setIsIssueModalOpen(true);
             }}
             data-testid="btn-issue-dept"
-            className="bg-imam-blue hover:bg-imam-navy text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex items-center gap-1.5 shadow-sm"
+            className="bg-imam-blue hover:bg-imam-navy text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-center"
           >
             <ArrowUpRight size={15} /> Issue to Department
           </button>
