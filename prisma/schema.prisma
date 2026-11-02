@@ -100,6 +100,8 @@ model Program {
   clinicalFee      Float
   batches          Batch[]
   students         Student[]
+  subjects         Subject[]
+  examSchedules    ExamSchedule[]
   feeStructures    FeeStructure[]
   createdAt        DateTime       @default(now())
 }
@@ -136,13 +138,16 @@ model Student {
   attendancePercent        Float                   @default(88.5)
   clinicalAttendancePercent Float                  @default(89.0)
   meritTier                Float                   @default(1.0)
-  status                   String                  @default("ACTIVE") // ACTIVE, PROBATION, SUSPENDED, GRADUATED
+  status                   String                  @default("ACTIVE") // ACTIVE, PROBATION, SUSPENDED, GRADUATED, WITHDRAWN, TRANSFERRED, DECEASED
   avatarUrl                String?
   qrCodeData               String?
   challans                 FeeChallan[]
   payments                 FeePayment[]
   competencyLogs           StudentCompetencyLog[]
   attendanceRecords        StudentAttendance[]
+  examMarks                ExamMark[]
+  ledgerEntries            StudentLedger[]
+  clinicalEvaluations      ClinicalEvaluation[]
   createdAt                DateTime                @default(now())
   updatedAt                DateTime                @updatedAt
 }
@@ -462,3 +467,361 @@ model PublicInquiry {
   status    String   @default("NEW") // NEW, IN_PROGRESS, RESOLVED
   createdAt DateTime @default(now())
 }
+
+// ==========================================
+// ENTERPRISE EXTENSIONS: GOVERNANCE & SECURITY
+// ==========================================
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  userId       String
+  userName     String
+  userRole     String
+  action       String   // CREATE, UPDATE, DELETE, APPROVE, REJECT, POST, REVERSE, EXPORT, PRINT
+  module       String   // FINANCE, ACADEMICS, HR, ADMISSIONS, CLINICAL, INVENTORY, SETTINGS, SECURITY
+  recordId     String?
+  description  String
+  previousState String?
+  newState     String?
+  ipAddress    String?  @default("127.0.0.1")
+  createdAt    DateTime @default(now())
+}
+
+model UserSession {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+model SystemRolePermission {
+  id         String   @id @default(uuid())
+  role       String   // Matches 20 institutional roles
+  resource   String   // STUDENTS, FINANCE, HR, CLINICAL, EXAMS, INVENTORY, DRAFTING, SETTINGS
+  canView    Boolean  @default(true)
+  canCreate  Boolean  @default(false)
+  canEdit    Boolean  @default(false)
+  canDelete  Boolean  @default(false)
+  canApprove Boolean  @default(false)
+  canPost    Boolean  @default(false)
+  canReverse Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model InstituteProfile {
+  id                    String   @id @default("imam-profile-01")
+  name                  String   @default("Imam Institute of Nursing & Allied Health Sciences")
+  tagline               String   @default("Trust in Quality Education")
+  logoUrl               String   @default("/icons/icon.svg")
+  crestMotto            String   @default("Trust in Quality Education")
+  registrationNo        String   @default("IINAHS-PNC-2019-JCD")
+  pncAffiliationNo      String   @default("PNC-AFF-4491-SN")
+  address               String   @default("Shah Ghazi Muhalla, Jacobabad, Sindh, Pakistan")
+  phone                 String   @default("+92 722 654321")
+  email                 String   @default("info@imcan.pk")
+  website               String   @default("https://imcan.pk")
+  chancellorName        String   @default("Mr. Sajid Hussain")
+  ceoName               String   @default("Dr. Hamid Hussain")
+  principalName         String   @default("Vinod Kumar (Principal)")
+  currency              String   @default("PKR")
+  timezone              String   @default("Asia/Karachi")
+  pncAttendanceThreshold Float   @default(85.0)
+  passingPercentage     Float    @default(50.0)
+  lateFeePerDay         Float    @default(100.0)
+  updatedAt             DateTime @updatedAt
+}
+
+model Campus {
+  id        String   @id @default(uuid())
+  code      String   @unique // MAIN_JCD
+  name      String   // Jacobabad Main Campus
+  city      String   @default("Jacobabad")
+  address   String
+  phone     String
+  email     String
+  createdAt DateTime @default(now())
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  code      String   @unique // NURSING, ALLIED_HEALTH, PARAMEDICAL, ACCOUNTS, ADMIN, CLINICAL
+  name      String
+  type      String   @default("ACADEMIC") // ACADEMIC, CLINICAL, ADMINISTRATIVE
+  headName  String
+  createdAt DateTime @default(now())
+}
+
+model AcademicSession {
+  id        String   @id @default(uuid())
+  name      String   @unique // "2024-2025", "2025-2026", "2026-2027"
+  startDate DateTime
+  endDate   DateTime
+  isCurrent Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Classroom {
+  id        String   @id @default(uuid())
+  roomNo    String   @unique // LH-01, SKILL-LAB-1, PATH-LAB
+  name      String
+  type      String   @default("LECTURE_HALL") // LECTURE_HALL, SKILLS_LAB, ANATOMY_LAB, COMPUTER_LAB
+  capacity  Int      @default(50)
+  createdAt DateTime @default(now())
+}
+
+model Subject {
+  id                   String         @id @default(uuid())
+  code                 String         @unique // NUR-101, ANAT-102, PHARM-201
+  name                 String
+  programId            String
+  program              Program        @relation(fields: [programId], references: [id])
+  semester             Int            @default(1)
+  creditHoursTheory    Int            @default(3)
+  creditHoursLab       Int            @default(1)
+  creditHoursClinical  Int            @default(2)
+  passingMarks         Int            @default(50)
+  maxMarks             Int            @default(100)
+  examMarks            ExamMark[]
+  examSchedules        ExamSchedule[]
+  createdAt            DateTime       @default(now())
+}
+
+model TimetableSlot {
+  id          String   @id @default(uuid())
+  programCode String   // BSN, POST_RN, LHV
+  batchName   String   // e.g. "Batch 2024-2028 (BSN Year 2)"
+  semester    Int      @default(1)
+  subjectCode String
+  subjectName String
+  teacherName String
+  roomNo      String
+  dayOfWeek   String   // MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+  startTime   String   // "08:30"
+  endTime     String   // "10:00"
+  slotType    String   @default("THEORY") // THEORY, LAB, CLINICAL
+  createdAt   DateTime @default(now())
+}
+
+model ExamSchedule {
+  id               String     @id @default(uuid())
+  title            String     // "Semester 4 Midterm Examination", "Annual Final Exam"
+  programId        String
+  program          Program    @relation(fields: [programId], references: [id])
+  semester         Int
+  subjectId        String
+  subject          Subject    @relation(fields: [subjectId], references: [id])
+  examDate         DateTime
+  startTime        String     @default("09:00 AM")
+  roomNo           String     @default("Auditorium Hall A")
+  maxTheoryMarks   Int        @default(60)
+  maxLabMarks      Int        @default(20)
+  maxInternalMarks Int        @default(20)
+  passingMarks     Int        @default(50)
+  marks            ExamMark[]
+  createdAt        DateTime   @default(now())
+}
+
+model ExamMark {
+  id             String       @id @default(uuid())
+  examScheduleId String
+  examSchedule   ExamSchedule @relation(fields: [examScheduleId], references: [id])
+  studentId      String
+  student        Student      @relation(fields: [studentId], references: [id])
+  subjectId      String
+  subject        Subject      @relation(fields: [subjectId], references: [id])
+  theoryMarks    Float        @default(0)
+  labMarks       Float        @default(0)
+  internalMarks  Float        @default(0)
+  totalMarks     Float        @default(0)
+  grade          String       @default("P") // A+, A, B+, B, C, F
+  gpa            Float        @default(3.0)
+  status         String       @default("APPROVED") // DRAFT, SUBMITTED, APPROVED, PUBLISHED
+  gradedBy       String       @default("Controller of Examinations")
+  approvedBy     String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model GradeScaleRule {
+  id            String @id @default(uuid())
+  grade         String @unique // A+, A, B+, B, C, F
+  minPercentage Float
+  maxPercentage Float
+  gpaPoints     Float
+  remarks       String
+}
+
+// ==========================================
+// ENTERPRISE EXTENSIONS: DOUBLE-ENTRY FINANCE
+// ==========================================
+
+model AccountHead {
+  id             String        @id @default(uuid())
+  code           String        @unique // 1001, 1002, 2001, 3001, 4001, 5001
+  title          String        // Cash in Hand, HBL Main A/C, Fee Receivables, Tuition Revenue, Salaries Expense
+  accountType    String        // ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE
+  parentId       String?
+  parent         AccountHead?  @relation("AccountHierarchy", fields: [parentId], references: [id])
+  children       AccountHead[] @relation("AccountHierarchy")
+  normalBalance  String        @default("DEBIT") // DEBIT, CREDIT
+  currentBalance Float         @default(0)
+  journalLines   JournalLine[]
+  createdAt      DateTime      @default(now())
+}
+
+model FinancialPeriod {
+  id        String    @id @default(uuid())
+  name      String    @unique // "FY 2025-2026", "FY 2026-2027"
+  startDate DateTime
+  endDate   DateTime
+  isClosed  Boolean   @default(false)
+  closedAt  DateTime?
+  closedBy  String?
+  createdAt DateTime  @default(now())
+}
+
+model JournalEntry {
+  id                 String        @id @default(uuid())
+  voucherNo          String        @unique // JV-2026-0001, CPV-2026-0001, BPV-2026-0001, CRV-2026-0001, BRV-2026-0001
+  voucherType        String        // JOURNAL, CASH_PAYMENT, BANK_PAYMENT, CASH_RECEIPT, BANK_RECEIPT
+  entryDate          DateTime      @default(now())
+  description        String
+  referenceNo        String?
+  status             String        @default("POSTED") // DRAFT, POSTED, REVERSED
+  postedBy           String        @default("System Accountant")
+  postedAt           DateTime?     @default(now())
+  reversedAt         DateTime?
+  reversedBy         String?
+  reversalReason     String?
+  totalAmount        Float
+  lines              JournalLine[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
+
+model JournalLine {
+  id             String       @id @default(uuid())
+  journalEntryId String
+  journalEntry   JournalEntry @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+  accountHeadId  String
+  accountHead    AccountHead  @relation(fields: [accountHeadId], references: [id])
+  debit          Float        @default(0)
+  credit         Float        @default(0)
+  costCenter     String?      // BSN, POST_RN, IMC_HOSPITAL, ADMIN
+  narration      String?
+  createdAt      DateTime     @default(now())
+}
+
+model StudentLedger {
+  id             String   @id @default(uuid())
+  studentId      String
+  student        Student  @relation(fields: [studentId], references: [id])
+  entryDate      DateTime @default(now())
+  referenceNo    String   // CHL-2026-XXXX, RCPT-2026-XXXX
+  voucherNo      String?  // CRV-2026-XXXX
+  debit          Float    @default(0) // Fee Billed
+  credit         Float    @default(0) // Fee Paid
+  runningBalance Float    @default(0)
+  description    String
+  createdAt      DateTime @default(now())
+}
+
+// ==========================================
+// ENTERPRISE EXTENSIONS: INVENTORY & PROCUREMENT
+// ==========================================
+
+model InventoryItem {
+  id             String             @id @default(uuid())
+  sku            String             @unique // MED-CAN-20G, STA-A4-PAPER, LAB-TUBE-EDTA
+  name           String
+  category       String             // MEDICAL_CONSUMABLES, LAB_CONSUMABLES, STATIONERY, FURNITURE, IT_EQUIPMENT
+  unit           String             @default("PIECES") // PIECES, PACKS, BOXES, LITERS, VIALS
+  unitCost       Float              @default(0)
+  currentStock   Int                @default(0)
+  minReorderLevel Int               @default(10)
+  location       String?            @default("Central Store Jacobabad")
+  transactions   StockTransaction[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+model StockTransaction {
+  id              String        @id @default(uuid())
+  itemId          String
+  item            InventoryItem @relation(fields: [itemId], references: [id])
+  transactionType String        // GRN (Goods Received), ISSUE (Department Issue), ADJUSTMENT, RETURN
+  quantity        Int
+  unitCost        Float
+  totalValue      Float
+  referenceNo     String?       // PO-2026-XX, REQ-2026-XX
+  costCenter      String?       // Skills Lab, Emergency Ward, Admin Office
+  department      String?
+  requestedBy     String
+  approvedBy      String?
+  notes           String?
+  createdAt       DateTime      @default(now())
+}
+
+model PurchaseRequisition {
+  id                 String   @id @default(uuid())
+  requisitionNo      String   @unique // PR-2026-XXXX
+  department         String
+  requestedBy        String
+  status             String   @default("APPROVED") // DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, ORDERED
+  totalEstimatedCost Float
+  justification      String
+  reviewedBy         String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+// ==========================================
+// ENTERPRISE EXTENSIONS: CLINICAL TRAINING & IMC
+// ==========================================
+
+model ClinicalDepartment {
+  id                   String                     @id @default(uuid())
+  name                 String                     // Emergency & Trauma, ICU/CCU, Pediatrics, General Surgery, Gynecology
+  hospitalName         String                     @default("Imam Medical Center")
+  bedCapacity          Int                        @default(20)
+  preceptorRatioLimit  Int                        @default(6) // Statutory PNC limit max 1:8
+  contactPerson        String                     @default("Dr. Hamid Hussain (Medical Director)")
+  rotations            ClinicalRotationSchedule[]
+  createdAt            DateTime                   @default(now())
+}
+
+model ClinicalRotationSchedule {
+  id            String             @id @default(uuid())
+  departmentId  String
+  department    ClinicalDepartment @relation(fields: [departmentId], references: [id])
+  programCode   String             // BSN, POST_RN, LHV
+  batchName     String             // e.g. "Batch 2024-2028 (BSN Year 2)"
+  startDate     DateTime
+  endDate       DateTime
+  shiftType     String             @default("MORNING") // MORNING, EVENING, NIGHT
+  preceptorId   String
+  preceptorName String
+  maxCapacity   Int                @default(10)
+  status        String             @default("ACTIVE") // SCHEDULED, ACTIVE, COMPLETED
+  createdAt     DateTime           @default(now())
+}
+
+model ClinicalEvaluation {
+  id                     String   @id @default(uuid())
+  studentId              String
+  student                Student  @relation(fields: [studentId], references: [id])
+  departmentName         String
+  preceptorName          String
+  clinicalKnowledgeScore Float    @default(8.5) // out of 10
+  clinicalSkillScore     Float    @default(9.0) // out of 10
+  professionalismScore   Float    @default(9.5) // out of 10
+  overallGrade           String   @default("A")
+  feedback               String
+  isSatisfactory         Boolean  @default(true)
+  evaluationDate         DateTime @default(now())
+  createdAt              DateTime @default(now())
+}
+

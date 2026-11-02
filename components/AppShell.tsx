@@ -17,6 +17,11 @@ import { DraftingStudioView } from '@/components/modules/DraftingStudioView';
 import { HRPayrollView } from '@/components/modules/HRPayrollView';
 import { ProfileView } from '@/components/modules/ProfileView';
 import { SupportStaffView } from '@/components/modules/SupportStaffView';
+import { DoubleEntryLedgerView } from '@/components/modules/DoubleEntryLedgerView';
+import { AcademicManagementView } from '@/components/modules/AcademicManagementView';
+import { InventoryStoresView } from '@/components/modules/InventoryStoresView';
+import { ClinicalGovernanceView } from '@/components/modules/ClinicalGovernanceView';
+import { AuditLogView } from '@/components/modules/AuditLogView';
 
 import { UserRole, ROLE_CONFIGS, hasTabAccess } from '@/lib/rbac';
 import { ShieldAlert, ArrowLeft } from 'lucide-react';
@@ -55,6 +60,15 @@ interface AppShellProps {
       notificationsEnabled: boolean;
       pinCode: string;
     }>;
+    chartOfAccounts: any[];
+    journalEntries: any[];
+    curriculumSubjects: any[];
+    timetableSlots: any[];
+    examSchedules: any[];
+    inventoryItems: any[];
+    clinicalDepartments: any[];
+    auditLogs: any[];
+    instituteProfile: any;
   };
 }
 
@@ -177,6 +191,22 @@ export const AppShell: React.FC<AppShellProps> = ({ initialData, initialTab, ini
                   <OwnerDashboardView initialData={initialData.ownerMetrics} />
                 )}
 
+                {activeTab === 'academics' && (
+                  <AcademicManagementView
+                    subjects={initialData.curriculumSubjects}
+                    timetableSlots={initialData.timetableSlots}
+                    examSchedules={initialData.examSchedules}
+                    students={initialData.students}
+                  />
+                )}
+
+                {activeTab === 'finance' && (
+                  <DoubleEntryLedgerView
+                    chartOfAccounts={initialData.chartOfAccounts}
+                    journalEntries={initialData.journalEntries}
+                  />
+                )}
+
                 {activeTab === 'fees' && (
                   <FeesCashierView
                     challans={initialData.challans}
@@ -189,6 +219,19 @@ export const AppShell: React.FC<AppShellProps> = ({ initialData, initialTab, ini
                     categories={initialData.categories}
                     vouchers={initialData.vouchers}
                     pettyCashBalance={initialData.pettyCashBalance}
+                  />
+                )}
+
+                {activeTab === 'inventory' && (
+                  <InventoryStoresView
+                    inventoryItems={initialData.inventoryItems}
+                  />
+                )}
+
+                {activeTab === 'clinical' && (
+                  <ClinicalGovernanceView
+                    departments={initialData.clinicalDepartments}
+                    students={initialData.students}
                   />
                 )}
 
@@ -214,6 +257,12 @@ export const AppShell: React.FC<AppShellProps> = ({ initialData, initialTab, ini
                   <HRPayrollView
                     staffList={initialData.staffList}
                     monthlyPayrollTotal={initialData.monthlyPayrollTotal}
+                  />
+                )}
+
+                {activeTab === 'audit' && (
+                  <AuditLogView
+                    auditLogs={initialData.auditLogs}
                   />
                 )}
 

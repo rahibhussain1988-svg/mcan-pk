@@ -234,7 +234,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
     await page.waitForTimeout(500);
 
     // Support staff portal should be displayed automatically
-    await expect(page.locator('text=Campus Support Staff')).toBeVisible();
+    await expect(page.locator('main').locator('text=Campus Support Staff')).toBeVisible();
     await expect(page.locator("text=Today's Campus & Hospital Assigned Duties")).toBeVisible();
     await expect(page.locator('text=October 2026 Salary Slip')).toBeVisible();
 
@@ -283,7 +283,7 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
 
     // 3. Clinical Ward Preceptor Ratio Card (1:6)
     await expect(page.locator('text=Preceptor Ward Ratio')).toBeVisible();
-    await expect(page.locator('text=1:6 Ratio')).toBeVisible();
+    await expect(page.locator('main').locator('text=1:6 Ratio')).toBeVisible();
 
     // 4. Defaulter Exam Lockout Risk Card
     await expect(page.locator('text=Defaulter Exam Lockout')).toBeVisible();
@@ -404,5 +404,128 @@ test.describe('Imam Institute Smart ERP & Clinical Triage PWA E2E Suite', () => 
       await expect(page.locator('[data-testid="print-letterhead-btn"]')).toBeVisible();
       await expect(page.locator('text=Print Letterhead (A4)')).toBeVisible();
     }
+  });
+
+  test('Double-Entry General Ledger, Chart of Accounts & Self-Balancing Trial Balance', async ({ page }) => {
+    const viewport = page.viewportSize();
+    if (viewport && viewport.width <= 768) return; // Desktop focused test
+
+    await page.goto('/erp');
+
+    // Navigate to Double-Entry Ledger tab
+    await page.locator('[data-testid="desktop-nav-finance"]').click();
+    await expect(page.locator('text=General Ledger & Financial Controller')).toBeVisible();
+
+    // Verify 4 Accounting Tabs
+    await expect(page.locator('[data-testid="tab-journal-entries"]')).toBeVisible();
+    await expect(page.locator('[data-testid="tab-chart-accounts"]')).toBeVisible();
+    await expect(page.locator('[data-testid="tab-trial-balance"]')).toBeVisible();
+    await expect(page.locator('[data-testid="tab-financial-statements"]')).toBeVisible();
+
+    // 1. Trial Balance Tab
+    await page.locator('[data-testid="tab-trial-balance"]').click();
+    await expect(page.locator('text=Institutional Trial Balance')).toBeVisible();
+    await expect(page.locator('text=Balanced Books (Debits = Credits)')).toBeVisible();
+
+    // 2. Chart of Accounts Tab
+    await page.locator('[data-testid="tab-chart-accounts"]').click();
+    await expect(page.locator('text=5-Tier Standard Chart of Accounts')).toBeVisible();
+
+    // 3. Financial Statements Tab
+    await page.locator('[data-testid="tab-financial-statements"]').click();
+    await expect(page.locator('text=Income & Expenditure Statement')).toBeVisible();
+
+    // 4. Return to Journal Vouchers
+    await page.locator('[data-testid="tab-journal-entries"]').click();
+    await expect(page.locator('[data-testid="new-journal-entry-btn"]')).toBeVisible();
+  });
+
+  test('Academic Management, Weekly Timetable & Examination Grading Desk', async ({ page }) => {
+    const viewport = page.viewportSize();
+    if (viewport && viewport.width <= 768) return; // Desktop focused test
+
+    await page.goto('/erp');
+
+    // Navigate to Academics tab
+    await page.locator('[data-testid="desktop-nav-academics"]').click();
+    await expect(page.locator('text=Academic & Examination Management')).toBeVisible();
+
+    // Verify Curriculum tab
+    await expect(page.locator('[data-testid="academic-tab-curriculum"]')).toBeVisible();
+    await expect(page.locator('text=Showing').and(page.locator('text=subjects'))).toBeVisible();
+
+    // Weekly Timetable tab
+    await page.locator('[data-testid="academic-tab-timetable"]').click();
+    await expect(page.locator('text=Day Filter:')).toBeVisible();
+    await expect(page.locator('text=Scheduled Sessions').first()).toBeVisible();
+
+    // Exams & Grading tab
+    await page.locator('[data-testid="academic-tab-exams"]').click();
+    await expect(page.locator('text=RESULTS PUBLISHED').or(page.locator('text=GRADING IN PROGRESS')).first()).toBeVisible();
+    await expect(page.locator('button:has-text("Enter Marks & Publish Grades")').first()).toBeVisible();
+
+    // Official Transcript Preview
+    await page.locator('[data-testid="academic-tab-transcript"]').click();
+    await expect(page.locator('text=OFFICIAL SEMESTER ACADEMIC TRANSCRIPT')).toBeVisible();
+    await expect(page.locator('text=Pakistan Nursing and Midwifery Council')).toBeVisible();
+  });
+
+  test('Central Stores & Medical Inventory with GRN and Department Issue', async ({ page }) => {
+    const viewport = page.viewportSize();
+    if (viewport && viewport.width <= 768) return; // Desktop focused test
+
+    await page.goto('/erp');
+
+    // Navigate to Inventory tab
+    await page.locator('[data-testid="desktop-nav-inventory"]').click();
+    await expect(page.locator('text=Central Stores & Medical Inventory')).toBeVisible();
+
+    // Verify KPIs
+    await expect(page.locator('text=Total Valuation').first()).toBeVisible();
+    await expect(page.locator('text=Active SKUs')).toBeVisible();
+    await expect(page.locator('text=Reorder Radar').first()).toBeVisible();
+
+    // Verify GRN and Issue action buttons
+    await expect(page.locator('[data-testid="btn-grn-receipt"]')).toBeVisible();
+    await expect(page.locator('[data-testid="btn-issue-dept"]')).toBeVisible();
+
+    // Switch to Reorder Radar
+    await page.locator('button:has-text("Reorder Radar")').click();
+    await expect(page.locator('text=Urgent Procurement Attention:').or(page.locator('text=Safe Reorder Level'))).toBeVisible();
+  });
+
+  test('Clinical Hospital Governance & Preceptor Sign-Off Desk', async ({ page }) => {
+    const viewport = page.viewportSize();
+    if (viewport && viewport.width <= 768) return; // Desktop focused test
+
+    await page.goto('/erp');
+
+    // Navigate to Clinical Governance tab
+    await page.locator('[data-testid="desktop-nav-clinical"]').click();
+    await expect(page.locator('text=Clinical Training & Hospital Governance')).toBeVisible();
+    await expect(page.locator('text=Clinical Governance & Legal Boundary Segregation')).toBeVisible();
+
+    // Verify Hospital Ward Cards & Ratio Checks
+    await expect(page.locator('text=Imam Medical Center').first()).toBeVisible();
+    await expect(page.locator('text=PNC RATIO OK').first()).toBeVisible();
+
+    // Click Preceptor Competency Sign-Off button
+    await page.locator('[data-testid="btn-evaluate-student"]').click();
+    await expect(page.locator('text=Clinical Preceptor Competency Evaluation')).toBeVisible();
+    await expect(page.locator('text=Preceptor Security PIN (Auth: 9988)')).toBeVisible();
+  });
+
+  test('Regulatory Audit Trail & Compliance Inspection', async ({ page }) => {
+    const viewport = page.viewportSize();
+    if (viewport && viewport.width <= 768) return; // Desktop focused test
+
+    await page.goto('/erp');
+
+    // Navigate to Audit tab
+    await page.locator('[data-testid="desktop-nav-audit"]').click();
+    await expect(page.locator('text=System Audit Trail & Security Logs')).toBeVisible();
+    await expect(page.locator('text=PNC & SMF Inspection Standard')).toBeVisible();
+    await expect(page.locator('text=Total Audit Events')).toBeVisible();
+    await expect(page.locator('text=Verified').first()).toBeVisible();
   });
 });

@@ -4,7 +4,10 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Clearing database and seeding comprehensive enterprise state for Imam Institute...');
 
-  // 1. Clean out existing records
+  // 1. Clean out existing records in proper dependency order
+  await prisma.examMark.deleteMany({});
+  await prisma.studentLedger.deleteMany({});
+  await prisma.clinicalEvaluation.deleteMany({});
   await prisma.studentCompetencyLog.deleteMany({});
   await prisma.patientTriageCase.deleteMany({});
   await prisma.feePayment.deleteMany({});
@@ -13,7 +16,17 @@ async function main() {
   await prisma.student.deleteMany({});
   await prisma.batch.deleteMany({});
   await prisma.feeStructure.deleteMany({});
+  await prisma.examSchedule.deleteMany({});
+  await prisma.subject.deleteMany({});
   await prisma.program.deleteMany({});
+  await prisma.timetableSlot.deleteMany({});
+  await prisma.journalLine.deleteMany({});
+  await prisma.journalEntry.deleteMany({});
+  await prisma.accountHead.deleteMany({});
+  await prisma.stockTransaction.deleteMany({});
+  await prisma.inventoryItem.deleteMany({});
+  await prisma.clinicalRotationSchedule.deleteMany({});
+  await prisma.clinicalDepartment.deleteMany({});
   await prisma.expenseVoucher.deleteMany({});
   await prisma.expenseCategory.deleteMany({});
   await prisma.pettyCashLog.deleteMany({});
@@ -1516,7 +1529,11 @@ async function main() {
     await prisma.applicationDocument.create({ data: doc });
   }
 
-  console.log(`Database successfully seeded with 18+ students, 8+ ESI triage cases, 6 trilingual documents, and full official staff roster!`);
+  // 17. Seed Enterprise Extensions (COA, Journal Entries, Timetables, Exam Marks, Clinical Rotations, Audit Logs)
+  const { seedEnterpriseData } = require('./seed-enterprise');
+  await seedEnterpriseData();
+
+  console.log(`Database successfully seeded with 18+ students, 8+ ESI triage cases, 6 trilingual documents, full official staff roster, and complete enterprise ledger & master data!`);
 }
 
 main()

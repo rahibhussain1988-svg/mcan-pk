@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, Command, X, ArrowRight, LayoutDashboard, Banknote, Receipt, HeartPulse, User, FileText, Users } from 'lucide-react';
+import { Search, Command, X, ArrowRight, LayoutDashboard, Banknote, Receipt, HeartPulse, User, FileText, Users, GraduationCap, BookOpen, Boxes, Stethoscope, ShieldCheck } from 'lucide-react';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -36,12 +36,17 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   const items = [
     { id: 'owner', title: 'Owner Executive Command Suite', category: 'Finance', icon: LayoutDashboard },
+    { id: 'academics', title: 'Curriculum, Syllabi & Exam Grading', category: 'Academic', icon: GraduationCap },
+    { id: 'finance', title: 'Double-Entry General Ledger (COA & Trial Balance)', category: 'Finance', icon: BookOpen },
     { id: 'fees', title: 'Fast-Cashier Fee Collection Desk', category: 'Finance', icon: Banknote },
     { id: 'expenses', title: 'Smart Expenses & Vendor Ledger', category: 'Finance', icon: Receipt },
+    { id: 'inventory', title: 'Central Stores, Stock & GRN Receipts', category: 'Operations', icon: Boxes },
+    { id: 'clinical', title: 'IMC Hospital Clinical Governance & Preceptorship', category: 'Hospital', icon: Stethoscope },
     { id: 'triage', title: 'Emergency Patient Triage (NEWS2/ESI)', category: 'Hospital', icon: HeartPulse },
     { id: 'student', title: 'Student Portal & PNC Logbook', category: 'Academic', icon: User },
     { id: 'drafting', title: 'Official Correspondence Drafting Studio', category: 'Registry', icon: FileText },
     { id: 'hr', title: 'HR, Staff & PKR Payroll Engine', category: 'HR', icon: Users },
+    { id: 'audit', title: 'Regulatory Audit Trail & Compliance Log', category: 'Governance', icon: ShieldCheck },
     { id: 'profile', title: 'Profile & PWA Preferences', category: 'Settings', icon: User },
   ];
 

@@ -14,6 +14,11 @@ import {
   ShieldCheck,
   Calendar,
   Lock,
+  BookOpen,
+  Boxes,
+  GraduationCap,
+  Stethoscope,
+  Activity,
 } from 'lucide-react';
 import { UserRole, ROLE_CONFIGS, hasTabAccess } from '@/lib/rbac';
 
@@ -43,14 +48,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: LayoutDashboard,
     },
     {
+      id: 'academics',
+      label: 'Curriculum & Exams',
+      badge: 'PNC & SMF',
+      badgeColor: 'bg-sky-600 text-white font-bold',
+      icon: GraduationCap,
+    },
+    {
+      id: 'finance',
+      label: 'Double-Entry Ledger',
+      badge: 'COA & JV',
+      badgeColor: 'bg-emerald-600 text-white font-bold',
+      icon: BookOpen,
+    },
+    {
       id: 'fees',
       label: 'Fast-Cashier Fees Desk',
       icon: Banknote,
     },
     {
       id: 'expenses',
-      label: 'Smart Expenses & Ledger',
+      label: 'Smart Expenses & Vouchers',
       icon: Receipt,
+    },
+    {
+      id: 'inventory',
+      label: 'Central Stores & Stock',
+      badge: 'Stores',
+      badgeColor: 'bg-indigo-600 text-white font-bold',
+      icon: Boxes,
+    },
+    {
+      id: 'clinical',
+      label: 'IMC Hospital Governance',
+      badge: '1:6 Ratio',
+      badgeColor: 'bg-rose-600 text-white font-bold',
+      icon: Stethoscope,
     },
     {
       id: 'triage',
@@ -77,6 +110,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: expiringLicensesCount > 0 ? 'PNC Alert' : undefined,
       badgeColor: 'bg-rose-500 text-white',
       icon: Users,
+    },
+    {
+      id: 'audit',
+      label: 'Regulatory Audit Trail',
+      badge: 'Audit Log',
+      badgeColor: 'bg-slate-700 text-white font-bold',
+      icon: ShieldCheck,
     },
     {
       id: 'support',
